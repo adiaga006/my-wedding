@@ -1,0 +1,18 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      # Prevent host node_modules from overriding container's
+      - /app/node_modules
+      - /app/.next
+    env_file:
+      - .env.local
+    environment:
+      - WATCHPACK_POLLING=true   # Hot reload inside Docker on Windows
+      - CHOKIDAR_USEPOLLING=true
+    restart: unless-stopped

@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-cormorant: 'Cormorant Garamond', serif;
+    --font-inter: 'Inter', sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* iOS momentum scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    @apply bg-cream text-charcoal font-sans;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5 {
+    @apply font-serif;
+  }
+
+  ::selection {
+    @apply bg-blush text-charcoal;
+  }
+
+  /* Tap highlight removal on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Minimum touch target */
+  button, a {
+    touch-action: manipulation;
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { @apply bg-cream; }
+  ::-webkit-scrollbar-thumb { @apply bg-blush/60 rounded-full; }
+}
+
+@layer components {
+  /* Responsive section padding */
+  .section-padding {
+    @apply py-16 px-5 sm:py-20 sm:px-8 md:py-28 md:px-12 lg:py-32 lg:px-24;
+  }
+
+  /* Responsive section title */
+  .section-title {
+    @apply font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-charcoal text-center leading-tight;
+  }
+
+  .section-subtitle {
+    @apply font-sans text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.3em] uppercase text-charcoal-light text-center mb-3 sm:mb-4;
+  }
+
+  .divider-ornament {
+    @apply flex items-center justify-center gap-3 sm:gap-4 my-4 sm:my-6;
+  }
+  .divider-ornament::before,
+  .divider-ornament::after {
+    content: '';
+    @apply flex-1 h-px bg-gradient-to-r from-transparent via-blush to-transparent max-w-24 sm:max-w-32;
+  }
+
+  /* Touch-friendly buttons — min 44px height */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 min-h-[44px] bg-charcoal text-cream font-sans text-xs sm:text-sm tracking-widest uppercase transition-all duration-300 hover:bg-charcoal-light active:scale-95;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 min-h-[44px] border border-charcoal text-charcoal font-sans text-xs sm:text-sm tracking-widest uppercase transition-all duration-300 hover:bg-charcoal hover:text-cream active:scale-95;
+  }
+
+  .gold-text {
+    @apply text-gold;
+    font-style: italic;
+  }
+
+  /* Form inputs — touch friendly */
+  .input-line {
+    @apply w-full border-b border-charcoal/20 bg-transparent py-3 min-h-[44px] font-sans text-sm text-charcoal placeholder:text-charcoal/40 focus:outline-none focus:border-gold transition-colors;
+  }
+  .input-line-dark {
+    @apply w-full border-b border-blush/40 bg-transparent py-3 min-h-[44px] font-sans text-sm text-cream placeholder:text-cream/40 focus:outline-none focus:border-gold transition-colors;
+  }
+}

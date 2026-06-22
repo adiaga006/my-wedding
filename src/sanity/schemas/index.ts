@@ -1,0 +1,8 @@
+export { siteConfig } from './siteConfig'
+export { story } from './story'
+export { galleryImage } from './galleryImage'
+export { weddingParty } from './weddingParty'
+export { rsvp } from './rsvp'
+export { guestbook } from './guestbook'
+export { faq } from './faq'
+export { bankInfo } from './bankInfo'
