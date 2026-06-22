@@ -14,3 +14,19 @@ export function formatDate(dateStr: string) {
     day: 'numeric',
   })
 }
+
+export function formatDateTime(dateStr: string) {
+  const date = new Date(dateStr)
+  const datePart = date.toLocaleDateString('vi-VN', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  const timePart = date.toLocaleTimeString('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  })
+  return { datePart, timePart }
+}

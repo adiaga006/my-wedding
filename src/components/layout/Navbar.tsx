@@ -53,7 +53,8 @@ export default function Navbar() {
           <a
             href="#hero"
             onClick={(e) => { e.preventDefault(); handleClick('#hero') }}
-            className="font-serif text-xl sm:text-2xl md:text-3xl italic text-charcoal hover:text-gold transition-colors"
+            style={{ fontFamily: 'var(--font-display)' }}
+            className="text-2xl sm:text-3xl md:text-4xl text-charcoal hover:text-gold transition-colors"
           >
             Duy &amp; Chi
           </a>
@@ -93,7 +94,7 @@ export default function Navbar() {
             transition={{ type: 'tween', duration: 0.28 }}
             className="fixed inset-0 z-40 bg-cream flex flex-col items-center justify-center gap-8 sm:gap-10 px-8"
           >
-            <p className="font-serif text-4xl italic text-gold mb-4">Duy &amp; Chi</p>
+            <p style={{ fontFamily: 'var(--font-display)' }} className="text-5xl text-gold mb-4">Duy &amp; Chi</p>
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}

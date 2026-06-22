@@ -5,7 +5,7 @@ import { ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import CountdownTimer from '@/components/ui/CountdownTimer'
 import { urlFor } from '@/sanity/lib/image'
-import { formatDate } from '@/lib/utils'
+import { formatDate, formatDateTime } from '@/lib/utils'
 
 interface HeroProps {
   groomName: string
@@ -19,6 +19,8 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
   const imageUrl = heroImage
     ? urlFor(heroImage).width(1920).height(1080).fit('crop').url()
     : null
+
+  const { datePart, timePart } = formatDateTime(weddingDate)
 
   return (
     <section id="hero" className="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden">
@@ -39,7 +41,7 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
       {/* Overlay gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/45 to-black/70" />
 
-      {/* Corner ornaments — nhỏ hơn trên mobile */}
+      {/* Corner ornaments */}
       <div className="absolute top-5 left-5 sm:top-8 sm:left-8 w-10 h-10 sm:w-16 sm:h-16 border-t-2 border-l-2 border-cream/30" />
       <div className="absolute top-5 right-5 sm:top-8 sm:right-8 w-10 h-10 sm:w-16 sm:h-16 border-t-2 border-r-2 border-cream/30" />
       <div className="absolute bottom-16 left-5 sm:bottom-8 sm:left-8 w-10 h-10 sm:w-16 sm:h-16 border-b-2 border-l-2 border-cream/30" />
@@ -56,12 +58,13 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
           Lễ thành hôn
         </motion.p>
 
-        {/* Tên chú rể */}
+        {/* Tên chú rể — Great Vibes calligraphy */}
         <motion.h1
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="font-serif text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] xl:text-[10rem] italic text-cream leading-none mb-3 sm:mb-4"
+          style={{ fontFamily: 'var(--font-display)' }}
+          className="text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] xl:text-[10rem] text-cream leading-none mb-3 sm:mb-4"
         >
           {groomName}
         </motion.h1>
@@ -74,7 +77,12 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
           className="flex items-center justify-center gap-4 sm:gap-6 mb-3 sm:mb-4"
         >
           <div className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-gold/70" />
-          <span className="text-gold text-xl sm:text-2xl font-serif italic">&amp;</span>
+          <span
+            style={{ fontFamily: 'var(--font-display)' }}
+            className="text-gold text-4xl sm:text-5xl leading-none"
+          >
+            &amp;
+          </span>
           <div className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-gold/70" />
         </motion.div>
 
@@ -83,20 +91,26 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="font-serif text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] xl:text-[10rem] italic text-cream leading-none mb-6 sm:mb-10"
+          style={{ fontFamily: 'var(--font-display)' }}
+          className="text-5xl xs:text-6xl sm:text-7xl md:text-8xl lg:text-[9rem] xl:text-[10rem] text-cream leading-none mb-6 sm:mb-10"
         >
           {brideName}
         </motion.h1>
 
-        {/* Ngày cưới */}
-        <motion.p
+        {/* Ngày và giờ cưới */}
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.1 }}
-          className="font-sans text-xs sm:text-sm tracking-widest text-cream/70 mb-8 sm:mb-12"
+          className="mb-8 sm:mb-12 flex flex-col items-center gap-1.5"
         >
-          {formatDate(weddingDate)}
-        </motion.p>
+          <p className="font-sans text-xs sm:text-sm tracking-widest text-cream/70">
+            {datePart}
+          </p>
+          <p className="font-serif italic text-gold text-sm sm:text-base tracking-widest">
+            {timePart}
+          </p>
+        </motion.div>
 
         {/* Quote */}
         {heroQuote && (
