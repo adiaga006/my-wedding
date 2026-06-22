@@ -23,7 +23,7 @@ export async function submitGuestbook(prevState: GuestbookState, formData: FormD
       authorName,
       message,
       submittedAt: new Date().toISOString(),
-      approved: true,
+      approved: false,
     })
     return { success: true, authorName, message }
   } catch {
