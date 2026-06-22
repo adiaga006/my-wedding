@@ -47,8 +47,8 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
       <div className="absolute bottom-16 left-5 sm:bottom-8 sm:left-8 w-10 h-10 sm:w-16 sm:h-16 border-b-2 border-l-2 border-cream/30" />
       <div className="absolute bottom-16 right-5 sm:bottom-8 sm:right-8 w-10 h-10 sm:w-16 sm:h-16 border-b-2 border-r-2 border-cream/30" />
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-4 xs:px-6 w-full max-w-4xl mx-auto">
+      {/* Content — pt đẩy khỏi navbar (h-14 sm:h-16 md:h-20) */}
+      <div className="relative z-10 text-center px-4 xs:px-6 w-full max-w-4xl mx-auto pt-20 sm:pt-24 md:pt-28">
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,7 +107,7 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
           <p className="font-sans text-xs sm:text-sm tracking-widest text-cream/70">
             {datePart}
           </p>
-          <p className="font-serif italic text-gold text-sm sm:text-base tracking-widest">
+          <p className="font-serif italic text-gold text-xl sm:text-2xl md:text-3xl tracking-[0.2em]">
             {timePart}
           </p>
         </motion.div>

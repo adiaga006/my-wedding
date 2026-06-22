@@ -135,6 +135,7 @@ function VenueCard({ venue, label, delay }: { venue: Venue; label: string; delay
 export default function DetailsSection({ ceremonyVenue, receptionVenue, weddingDate, groomName, brideName }: DetailsProps) {
   const dateVi = new Date(weddingDate).toLocaleDateString('vi-VN', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    timeZone: 'Asia/Ho_Chi_Minh',
   })
 
   return (
