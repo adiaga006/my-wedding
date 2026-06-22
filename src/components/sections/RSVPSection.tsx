@@ -2,7 +2,7 @@
 
 import { useState, useActionState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { CheckCircle, Loader2 } from 'lucide-react'
+import { CheckCircle, Loader2, Heart, HeartOff } from 'lucide-react'
 import { submitRSVP } from '@/actions/rsvp'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
@@ -40,37 +40,42 @@ export default function RSVPSection() {
               animate={{ opacity: 1 }}
               className="space-y-7 sm:space-y-8"
             >
-              {/* Hidden field truyền attending vào Server Action */}
               <input type="hidden" name="attending" value={String(attending ?? false)} />
 
-              {/* Attending choice */}
+              {/* Attending choice — elegant minimal */}
               <div>
                 <p className="font-sans text-xs tracking-widest uppercase text-charcoal-light mb-4 text-center">
                   Bạn có tham dự không?
                 </p>
                 <div className="flex flex-col xs:flex-row gap-3">
                   {[
-                    { label: '✅ Có, tôi sẽ đến', value: true },
-                    { label: '❌ Tiếc quá, tôi bận', value: false },
-                  ].map((opt) => (
+                    { label: 'Có, tôi sẽ đến', value: true,  Icon: Heart },
+                    { label: 'Rất tiếc, tôi bận', value: false, Icon: HeartOff },
+                  ].map(({ label, value, Icon }) => (
                     <button
-                      key={String(opt.value)}
+                      key={String(value)}
                       type="button"
-                      onClick={() => setAttending(opt.value)}
-                      className={`flex-1 py-3 min-h-[48px] font-sans text-sm border transition-all duration-200 ${
-                        attending === opt.value
+                      onClick={() => setAttending(value)}
+                      className={`flex-1 flex flex-col items-center gap-2 py-5 min-h-[80px] font-sans text-[10px] tracking-widest uppercase border transition-all duration-300 ${
+                        attending === value
                           ? 'bg-charcoal text-cream border-charcoal'
-                          : 'bg-transparent text-charcoal border-charcoal/30 hover:border-charcoal/60'
+                          : 'bg-transparent text-charcoal-light border-charcoal/20 hover:border-charcoal/50 hover:text-charcoal'
                       }`}
                     >
-                      {opt.label}
+                      <Icon
+                        size={20}
+                        strokeWidth={1.25}
+                        fill={attending === value ? 'currentColor' : 'none'}
+                        className="transition-all duration-300"
+                      />
+                      {label}
                     </button>
                   ))}
                 </div>
               </div>
 
               <input className="input-line" name="name" placeholder="Họ và tên *" required />
-              <input className="input-line" name="phone" placeholder="Số điện thoại *" type="tel" inputMode="tel" required />
+              <input className="input-line" name="phone" placeholder="Số điện thoại" type="tel" inputMode="tel" />
 
               {attending && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
@@ -79,10 +84,7 @@ export default function RSVPSection() {
                   </label>
                   <div className="flex items-center gap-3">
                     {[1, 2, 3, 4].map((n) => (
-                      <label
-                        key={n}
-                        className="relative cursor-pointer"
-                      >
+                      <label key={n} className="relative cursor-pointer">
                         <input type="radio" name="guestCount" value={n} defaultChecked={n === 1} className="sr-only peer" />
                         <span className="flex items-center justify-center w-11 h-11 border font-serif text-lg transition-all border-charcoal/30 text-charcoal peer-checked:bg-charcoal peer-checked:text-cream peer-checked:border-charcoal">
                           {n}
