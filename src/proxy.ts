@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
-  // Chỉ bảo vệ route /studio
+export function proxy(request: NextRequest) {
   if (!request.nextUrl.pathname.startsWith('/studio')) {
     return NextResponse.next()
   }
 
   const adminPassword = process.env.ADMIN_PASSWORD
-  if (!adminPassword) return NextResponse.next() // Dev mode: không có password thì bypass
+  if (!adminPassword) return NextResponse.next()
 
   const authHeader = request.headers.get('authorization')
   if (authHeader) {

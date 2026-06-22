@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { VolumeX, Volume2, SkipForward } from 'lucide-react'
 
 function extractYouTubeId(url: string): string | null {

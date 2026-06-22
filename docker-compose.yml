@@ -11,7 +11,7 @@ services:
       - /app/node_modules
       - /app/.next
     env_file:
-      - .env.local
+      - .env
     environment:
       - WATCHPACK_POLLING=true   # Hot reload inside Docker on Windows
       - CHOKIDAR_USEPOLLING=true

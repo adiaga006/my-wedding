@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useActionState, useOptimistic } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import { CheckCircle, Loader2, Heart } from 'lucide-react'
+import { submitGuestbook } from '@/actions/guestbook'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
 
@@ -13,40 +14,22 @@ interface GuestMessage {
   submittedAt: string
 }
 
-type FormState = 'idle' | 'loading' | 'success' | 'error'
-
 export default function GuestBookSection({ initialMessages }: { initialMessages: GuestMessage[] }) {
-  const [messages, setMessages] = useState(initialMessages)
-  const [formState, setFormState] = useState<FormState>('idle')
-  const [form, setForm] = useState({ authorName: '', message: '' })
-  const [errorMsg, setErrorMsg] = useState('')
+  const [optimisticMessages, addOptimistic] = useOptimistic(
+    initialMessages,
+    (current, newMsg: GuestMessage) => [newMsg, ...current]
+  )
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setFormState('loading')
-    setErrorMsg('')
-    try {
-      const res = await fetch('/api/guestbook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
-      setMessages((prev) => [{
-        _id: Date.now().toString(),
-        authorName: form.authorName,
-        message: form.message,
-        submittedAt: new Date().toISOString(),
-      }, ...prev])
-      setForm({ authorName: '', message: '' })
-      setFormState('success')
-      setTimeout(() => setFormState('idle'), 3000)
-    } catch (err: unknown) {
-      setFormState('error')
-      setErrorMsg(err instanceof Error ? err.message : 'Có lỗi xảy ra')
-    }
-  }
+  const [state, action, isPending] = useActionState(
+    async (prevState: Awaited<ReturnType<typeof submitGuestbook>>, formData: FormData) => {
+      const authorName = formData.get('authorName') as string
+      const message = formData.get('message') as string
+      // Hiển thị optimistic ngay lập tức
+      addOptimistic({ _id: `temp-${Date.now()}`, authorName, message, submittedAt: new Date().toISOString() })
+      return submitGuestbook(prevState, formData)
+    },
+    null
+  )
 
   return (
     <SectionWrapper id="guestbook" className="section-padding bg-charcoal">
@@ -55,7 +38,7 @@ export default function GuestBookSection({ initialMessages }: { initialMessages:
       {/* Form */}
       <div className="max-w-lg mx-auto mb-16 sm:mb-20">
         <AnimatePresence mode="wait">
-          {formState === 'success' ? (
+          {state?.success ? (
             <motion.div
               key="thanks"
               initial={{ opacity: 0 }}
@@ -69,34 +52,32 @@ export default function GuestBookSection({ initialMessages }: { initialMessages:
           ) : (
             <motion.form
               key="form"
-              onSubmit={handleSubmit}
+              action={action}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="space-y-6"
             >
               <input
                 className="input-line-dark"
+                name="authorName"
                 placeholder="Tên bạn *"
-                value={form.authorName}
-                onChange={(e) => setForm((f) => ({ ...f, authorName: e.target.value }))}
                 required
               />
               <textarea
                 className="input-line-dark resize-none"
+                name="message"
                 placeholder="Lời chúc gửi đến Duy & Chi *"
                 rows={4}
-                value={form.message}
-                onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                 required
               />
-              {errorMsg && <p className="text-red-400 text-xs font-sans">{errorMsg}</p>}
+              {state?.error && <p className="text-red-400 text-xs font-sans">{state.error}</p>}
               <div className="text-center pt-2">
                 <button
                   type="submit"
-                  disabled={formState === 'loading'}
+                  disabled={isPending}
                   className="btn-primary bg-blush border-blush text-charcoal hover:bg-blush-dark hover:border-blush-dark w-full xs:w-auto px-10"
                 >
-                  {formState === 'loading'
+                  {isPending
                     ? <><Loader2 size={14} className="animate-spin" /> Đang gửi...</>
                     : <><Heart size={14} /> Gửi lời chúc</>}
                 </button>
@@ -106,19 +87,18 @@ export default function GuestBookSection({ initialMessages }: { initialMessages:
         </AnimatePresence>
       </div>
 
-      {/* Messages wall — 1 col mobile, 2 col sm, 3 col lg */}
-      {messages.length > 0 && (
+      {/* Messages wall */}
+      {optimisticMessages.length > 0 && (
         <div className="max-w-5xl mx-auto [column-count:1] sm:[column-count:2] lg:[column-count:3] [column-gap:16px]">
-          {messages.map((msg, i) => (
+          {optimisticMessages.map((msg, i) => (
             <motion.div
               key={msg._id}
               initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: (i % 9) * 0.04 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: i < 3 ? i * 0.06 : 0 }}
               className="break-inside-avoid mb-4 bg-white/5 border border-white/10 p-5 sm:p-6 hover:border-blush/25 transition-colors duration-300"
             >
-              <p className="font-serif italic text-cream/80 text-sm sm:text-sm leading-relaxed mb-4">
+              <p className="font-serif italic text-cream/80 text-sm leading-relaxed mb-4">
                 &ldquo;{msg.message}&rdquo;
               </p>
               <div className="flex items-center justify-between">

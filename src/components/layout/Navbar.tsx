@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 import { Menu, X } from 'lucide-react'
 
 const NAV_LINKS = [
@@ -55,7 +55,7 @@ export default function Navbar() {
             onClick={(e) => { e.preventDefault(); handleClick('#hero') }}
             className="font-serif text-xl sm:text-2xl md:text-3xl italic text-charcoal hover:text-gold transition-colors"
           >
-            D &amp; C
+            Duy &amp; Chi
           </a>
 
           {/* Desktop Nav */}

@@ -1,90 +1,235 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    --font-cormorant: 'Cormorant Garamond', serif;
-    --font-inter: 'Inter', sans-serif;
+/* ── Theme tokens (Tailwind v4) ── */
+@theme inline {
+  /* Breakpoints */
+  --breakpoint-xs: 375px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Colors */
+  --color-cream:         #FAF8F5;
+  --color-blush:         #F2C4CE;
+  --color-blush-dark:    #E8A0B0;
+  --color-sage:          #B7C4B1;
+  --color-sage-dark:     #8FA888;
+  --color-gold:          #C9A96E;
+  --color-gold-dark:     #A67C52;
+  --color-charcoal:      #3D3D3D;
+  --color-charcoal-light:#6B6B6B;
+
+  /* Fonts — reference next/font CSS vars */
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans:  var(--font-inter), system-ui, sans-serif;
+
+  /* Animations */
+  --animate-fade-in:  fadeIn 1s ease-out forwards;
+  --animate-slide-up: slideUp 0.8s ease-out forwards;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
 
+/* ── Base styles ── */
+@layer base {
   html {
     scroll-behavior: smooth;
-    /* iOS momentum scrolling */
     -webkit-overflow-scrolling: touch;
   }
 
   body {
-    @apply bg-cream text-charcoal font-sans;
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
     overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5 {
-    @apply font-serif;
+    font-family: var(--font-serif);
   }
 
   ::selection {
-    @apply bg-blush text-charcoal;
+    background-color: var(--color-blush);
+    color: var(--color-charcoal);
   }
 
-  /* Tap highlight removal on mobile */
   * {
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Minimum touch target */
   button, a {
     touch-action: manipulation;
   }
 
   ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { @apply bg-cream; }
-  ::-webkit-scrollbar-thumb { @apply bg-blush/60 rounded-full; }
+  ::-webkit-scrollbar-track { background: var(--color-cream); }
+  ::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--color-blush) 60%, transparent); border-radius: 9999px; }
 }
 
-@layer components {
-  /* Responsive section padding */
-  .section-padding {
-    @apply py-16 px-5 sm:py-20 sm:px-8 md:py-28 md:px-12 lg:py-32 lg:px-24;
-  }
+/* ── Utilities ── */
+@utility section-padding {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 
-  /* Responsive section title */
-  .section-title {
-    @apply font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-charcoal text-center leading-tight;
+  @media (min-width: 640px) {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
+  @media (min-width: 768px) {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+  @media (min-width: 1024px) {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    padding-left: 6rem;
+    padding-right: 6rem;
+  }
+}
 
-  .section-subtitle {
-    @apply font-sans text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.3em] uppercase text-charcoal-light text-center mb-3 sm:mb-4;
-  }
+@utility section-title {
+  font-family: var(--font-serif);
+  font-size: 1.875rem;
+  line-height: 1.2;
+  color: var(--color-charcoal);
+  text-align: center;
 
-  .divider-ornament {
-    @apply flex items-center justify-center gap-3 sm:gap-4 my-4 sm:my-6;
+  @media (min-width: 640px)  { font-size: 2.25rem; }
+  @media (min-width: 768px)  { font-size: 3rem; }
+  @media (min-width: 1024px) { font-size: 3.75rem; }
+}
+
+@utility section-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-charcoal-light);
+  text-align: center;
+  margin-bottom: 0.75rem;
+
+  @media (min-width: 640px) {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    margin-bottom: 1rem;
   }
-  .divider-ornament::before,
-  .divider-ornament::after {
+}
+
+@utility divider-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  &::before, &::after {
     content: '';
-    @apply flex-1 h-px bg-gradient-to-r from-transparent via-blush to-transparent max-w-24 sm:max-w-32;
+    flex: 1;
+    height: 1px;
+    max-width: 6rem;
+    background: linear-gradient(to right, transparent, var(--color-blush), transparent);
   }
+}
 
-  /* Touch-friendly buttons — min 44px height */
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 min-h-[44px] bg-charcoal text-cream font-sans text-xs sm:text-sm tracking-widest uppercase transition-all duration-300 hover:bg-charcoal-light active:scale-95;
-  }
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  min-height: 44px;
+  background-color: var(--color-charcoal);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  border: 1px solid var(--color-charcoal);
+  cursor: pointer;
 
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 min-h-[44px] border border-charcoal text-charcoal font-sans text-xs sm:text-sm tracking-widest uppercase transition-all duration-300 hover:bg-charcoal hover:text-cream active:scale-95;
-  }
+  &:hover { background-color: var(--color-charcoal-light); }
+  &:active { transform: scale(0.97); }
 
-  .gold-text {
-    @apply text-gold;
-    font-style: italic;
+  @media (min-width: 640px) {
+    font-size: 0.75rem;
+    padding: 0.75rem 2rem;
   }
+}
 
-  /* Form inputs — touch friendly */
-  .input-line {
-    @apply w-full border-b border-charcoal/20 bg-transparent py-3 min-h-[44px] font-sans text-sm text-charcoal placeholder:text-charcoal/40 focus:outline-none focus:border-gold transition-colors;
+@utility btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  min-height: 44px;
+  background-color: transparent;
+  color: var(--color-charcoal);
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-charcoal);
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-charcoal);
+    color: var(--color-cream);
   }
-  .input-line-dark {
-    @apply w-full border-b border-blush/40 bg-transparent py-3 min-h-[44px] font-sans text-sm text-cream placeholder:text-cream/40 focus:outline-none focus:border-gold transition-colors;
+  &:active { transform: scale(0.97); }
+
+  @media (min-width: 640px) {
+    font-size: 0.75rem;
+    padding: 0.75rem 2rem;
   }
+}
+
+@utility input-line {
+  width: 100%;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-charcoal) 20%, transparent);
+  background: transparent;
+  padding: 0.75rem 0;
+  min-height: 44px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-charcoal);
+  outline: none;
+  transition: border-color 0.2s;
+
+  &::placeholder { color: color-mix(in srgb, var(--color-charcoal) 40%, transparent); }
+  &:focus { border-color: var(--color-gold); }
+}
+
+@utility input-line-dark {
+  width: 100%;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-blush) 40%, transparent);
+  background: transparent;
+  padding: 0.75rem 0;
+  min-height: 44px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-cream);
+  outline: none;
+  transition: border-color 0.2s;
+
+  &::placeholder { color: color-mix(in srgb, var(--color-cream) 40%, transparent); }
+  &:focus { border-color: var(--color-gold); }
 }
