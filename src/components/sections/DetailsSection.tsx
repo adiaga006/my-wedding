@@ -210,35 +210,39 @@ export default function DetailsSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="relative bg-white border border-blush/30 rounded-sm hover:shadow-xl transition-shadow duration-500"
+            className="relative bg-white shadow-sm hover:shadow-lg transition-shadow duration-500 overflow-hidden"
           >
-            {/* Top diamond */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3">
-              <div className="w-6 h-6 border-2 border-gold rotate-45" />
-            </div>
+            {/* Gold top accent */}
+            <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-gold to-transparent" />
 
-            <div className="px-5 xs:px-8 sm:px-12 md:px-14 pt-10 sm:pt-12 pb-8 sm:pb-10 text-center">
+            <div className="px-6 xs:px-10 sm:px-14 md:px-16 pt-10 sm:pt-12 pb-10 sm:pb-12 text-center">
+
+              {/* Venue name + hall */}
               {venue.name && (
-                <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl text-charcoal leading-tight mb-1">
+                <h3 className="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal leading-none mb-2">
                   {venue.name}
                 </h3>
               )}
               {venue.hall && (
-                <p className="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-5">{venue.hall}</p>
+                <p className="font-sans text-[10px] xs:text-xs tracking-[0.4em] uppercase text-gold mb-6">{venue.hall}</p>
               )}
 
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <div className="h-px w-10 bg-blush/60" />
-                <span className="text-gold text-xs">✦</span>
-                <div className="h-px w-10 bg-blush/60" />
+              {/* Ornament divider */}
+              <div className="flex items-center justify-center gap-4 mb-7">
+                <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-transparent to-blush/60" />
+                <span className="text-gold/70 text-base leading-none">❧</span>
+                <div className="h-px flex-1 max-w-[60px] bg-gradient-to-l from-transparent to-blush/60" />
               </div>
 
+              {/* Address — full center */}
               {venue.address && (
-                <div className="flex items-start justify-center gap-2 mb-7">
-                  <MapPin size={14} className="text-gold flex-shrink-0 mt-0.5" />
-                  <p className="font-sans text-sm sm:text-base text-charcoal-light leading-relaxed text-left max-w-xs">
-                    {venue.address}
-                  </p>
+                <div className="mb-8">
+                  <div className="inline-flex items-start gap-2 text-left">
+                    <MapPin size={13} className="text-gold flex-shrink-0 mt-[3px]" />
+                    <p className="font-sans text-sm sm:text-[15px] text-charcoal-light leading-relaxed">
+                      {venue.address}
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -250,23 +254,25 @@ export default function DetailsSection({
                 ].filter(Boolean) as { label: string; value: string }[]
 
                 return (
-                  <div className={`mb-8 grid divide-x divide-blush/20 ${times.length === 1 ? 'grid-cols-1' : times.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
-                    {times.map((t) => (
-                      <div key={t.label} className="flex flex-col items-center gap-1.5 px-2 sm:px-4">
-                        <p className="font-sans text-[10px] xs:text-xs tracking-widest uppercase text-charcoal-light">{t.label}</p>
-                        <div className="flex items-center gap-1">
-                          <Clock size={12} className="text-gold flex-shrink-0" />
-                          <p className="font-serif text-lg sm:text-xl md:text-2xl text-charcoal">{t.value}</p>
+                  <div className="mb-9 mx-auto max-w-xs">
+                    <div className={`grid border border-blush/30 divide-x divide-blush/30 ${times.length === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                      {times.map((t) => (
+                        <div key={t.label} className="flex flex-col items-center gap-2 py-4 px-3">
+                          <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-charcoal-light">{t.label}</p>
+                          <div className="flex items-center gap-1.5">
+                            <Clock size={12} className="text-gold" />
+                            <p className="font-serif text-2xl sm:text-3xl text-charcoal leading-none">{t.value}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 )
               })()}
 
               {/* Inline map */}
               {venue.mapEmbed && extractMapSrc(venue.mapEmbed) && (
-                <div className="mb-6 overflow-hidden rounded-sm relative" style={{ paddingBottom: '50%' }}>
+                <div className="mb-7 overflow-hidden relative -mx-6 xs:-mx-10 sm:-mx-14 md:-mx-16" style={{ paddingBottom: '52%' }}>
                   <iframe
                     src={extractMapSrc(venue.mapEmbed)}
                     className="absolute inset-0 w-full h-full border-0"
@@ -280,20 +286,20 @@ export default function DetailsSection({
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 {venue.mapEmbed && extractMapSrc(venue.mapEmbed) && (
-                  <button onClick={() => setShowMap(true)} className="btn-primary w-full sm:w-auto px-8">
+                  <button onClick={() => setShowMap(true)} className="btn-primary w-full sm:w-auto px-10">
                     <Map size={13} /> Xem to hơn
                   </button>
                 )}
                 {venue.mapUrl && (
-                  <a href={venue.mapUrl} target="_blank" rel="noopener noreferrer" className="btn-outline w-full sm:w-auto px-8">
+                  <a href={venue.mapUrl} target="_blank" rel="noopener noreferrer" className="btn-outline w-full sm:w-auto px-10">
                     <MapPin size={13} /> Mở Google Maps
                   </a>
                 )}
               </div>
             </div>
 
-            <div className="absolute bottom-3 left-3 w-5 h-5 border-b border-l border-blush/40" />
-            <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-blush/40" />
+            {/* Gold bottom accent */}
+            <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-gold to-transparent" />
           </motion.div>
         ) : (
           <p className="text-center font-serif italic text-charcoal-light text-xl sm:text-2xl py-16">
