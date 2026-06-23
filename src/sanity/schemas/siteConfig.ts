@@ -74,7 +74,7 @@ export const siteConfig = defineType({
           title: 'Tiêu đề',
           type: 'string',
           description: 'VD: Duy & Chi — Trân trọng kính mời',
-          initialValue: 'Duy & Chi — Đám cưới của chúng tôi',
+          initialValue: 'Duy & Chi — Đám cưới của chúng mình',
         }),
         defineField({
           name: 'ogDescription',
@@ -82,7 +82,7 @@ export const siteConfig = defineType({
           type: 'text',
           rows: 3,
           description: 'Dòng mô tả hiện bên dưới tiêu đề khi share',
-          initialValue: 'Chúng tôi trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Duy & Chi ♡',
+          initialValue: 'Chúng mình trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Duy & Chi ♡',
         }),
         defineField({
           name: 'ogImage',

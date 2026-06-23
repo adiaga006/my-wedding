@@ -21,11 +21,11 @@ const greatVibes = Great_Vibes({
 })
 
 export const metadata: Metadata = {
-  title: 'Duy & Chi — Đám cưới của chúng tôi',
-  description: 'Chúng tôi trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Duy & Chi',
+  title: 'Duy & Chi — Đám cưới của chúng mình',
+  description: 'Chúng mình trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Duy & Chi',
   openGraph: {
     title: 'Duy & Chi — Wedding',
-    description: 'Chúng tôi trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi',
+    description: 'Chúng mình trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng mình',
     type: 'website',
   },
   icons: {

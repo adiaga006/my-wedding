@@ -34,7 +34,7 @@ export default function CountdownTimer({ targetDate }: { targetDate: string }) {
   if (isPast) {
     return (
       <p className="font-serif text-xl sm:text-2xl italic text-cream/80 text-center">
-        Hôm nay là ngày trọng đại của chúng tôi 🎊
+        Hôm nay là ngày trọng đại của chúng mình 🎊
       </p>
     )
   }

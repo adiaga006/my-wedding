@@ -113,7 +113,7 @@ export default function GiftSection({ accounts }: { accounts: BankAccount[] }) {
         className="text-center font-serif italic text-charcoal-light text-base sm:text-lg max-w-sm sm:max-w-lg mx-auto mb-10 sm:mb-14 leading-relaxed px-4"
       >
         Sự hiện diện của bạn là món quà ý nghĩa nhất. Nếu bạn muốn gửi thêm tình cảm,
-        chúng tôi trân trọng đón nhận ♡
+        chúng mình xin trân trọng đón nhận ♡
       </motion.p>
 
       {accounts.length === 0 ? (
@@ -142,11 +142,10 @@ export default function GiftSection({ accounts }: { accounts: BankAccount[] }) {
         </div>
       ) : (
         /* 1 hoặc 3+ tài khoản */
-        <div className={`mx-auto grid gap-5 sm:gap-8 ${
-          accounts.length === 1
+        <div className={`mx-auto grid gap-5 sm:gap-8 ${accounts.length === 1
             ? 'max-w-xs grid-cols-1'
             : 'max-w-3xl grid-cols-1 sm:grid-cols-2'
-        }`}>
+          }`}>
           {accounts.map((acc, i) => (
             <AccountCard key={acc._id} account={acc} index={i} />
           ))}

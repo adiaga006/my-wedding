@@ -31,9 +31,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const config = await client.fetch(SITE_CONFIG_QUERY)
   const preview = config?.sharePreview
 
-  const title       = preview?.ogTitle       || 'Duy & Chi — Đám cưới của chúng tôi'
-  const description = preview?.ogDescription || 'Chúng tôi trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Duy & Chi ♡'
-  const imageUrl    = preview?.ogImage
+  const title = preview?.ogTitle || 'Duy & Chi — Đám cưới của chúng mình'
+  const description = preview?.ogDescription || 'Chúng mình trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Duy & Chi ♡'
+  const imageUrl = preview?.ogImage
     ? urlFor(preview.ogImage).width(1200).height(630).fit('crop').url()
     : null
 

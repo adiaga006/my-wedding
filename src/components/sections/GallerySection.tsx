@@ -25,7 +25,7 @@ export default function GallerySection({ images }: { images: GalleryImage[] }) {
 
   return (
     <SectionWrapper id="gallery" className="section-padding bg-charcoal">
-      <SectionHeader eyebrow="Pre-wedding" title="Hình ảnh của chúng tôi" />
+      <SectionHeader eyebrow="Pre-wedding" title="Khoảnh khắc của chúng mình" />
 
       {images.length === 0 ? (
         <p className="text-center text-cream/40 font-serif italic text-lg sm:text-xl py-16">

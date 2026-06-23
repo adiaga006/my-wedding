@@ -76,7 +76,7 @@ export default function StorySection({ items }: { items: StoryItem[] }) {
 
   return (
     <SectionWrapper id="story" className="section-padding bg-cream">
-      <SectionHeader eyebrow="Câu chuyện của chúng tôi" title="Hành trình tình yêu" />
+      <SectionHeader eyebrow="Câu chuyện của chúng mình" title="Hành trình tình yêu" />
 
       <div className="max-w-5xl mx-auto relative">
         {/* Vertical line — desktop only */}

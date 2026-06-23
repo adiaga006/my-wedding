@@ -8,7 +8,7 @@ import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
 
 const YES_HOVER_LABEL = 'Thật tuyệt vời! ✨'
-const NO_HOVER_LABEL  = 'Chúng tôi sẽ nhớ bạn...'
+const NO_HOVER_LABEL = 'Chúng mình sẽ nhớ bạn...'
 
 function AttendanceButton({
   value,
@@ -23,7 +23,7 @@ function AttendanceButton({
   const isYes = value
 
   const defaultLabel = isYes ? 'Có, tôi sẽ đến' : 'Rất tiếc, tôi bận'
-  const hoverLabel   = isYes ? YES_HOVER_LABEL : NO_HOVER_LABEL
+  const hoverLabel = isYes ? YES_HOVER_LABEL : NO_HOVER_LABEL
 
   return (
     <motion.button
@@ -32,13 +32,12 @@ function AttendanceButton({
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       whileTap={{ scale: 0.97 }}
-      className={`relative flex-1 flex flex-col items-center gap-3 py-6 min-h-[96px] overflow-hidden border transition-colors duration-300 ${
-        selected
-          ? isYes
-            ? 'bg-gold/10 border-gold text-gold'
-            : 'bg-charcoal text-cream border-charcoal'
-          : 'bg-transparent border-charcoal/15 text-charcoal-light'
-      }`}
+      className={`relative flex-1 flex flex-col items-center gap-3 py-6 min-h-[96px] overflow-hidden border transition-colors duration-300 ${selected
+        ? isYes
+          ? 'bg-gold/10 border-gold text-gold'
+          : 'bg-charcoal text-cream border-charcoal'
+        : 'bg-transparent border-charcoal/15 text-charcoal-light'
+        }`}
     >
       {/* Shimmer on hover (yes only) */}
       {isYes && hovered && !selected && (
@@ -56,8 +55,8 @@ function AttendanceButton({
           <motion.span
             key="hovered"
             initial={{ scale: 0.5, opacity: 0, rotate: isYes ? -20 : 0 }}
-            animate={{ scale: 1,   opacity: 1, rotate: 0 }}
-            exit={{   scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0.5, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 18 }}
           >
             {isYes
@@ -69,8 +68,8 @@ function AttendanceButton({
           <motion.span
             key="default"
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1,   opacity: 1 }}
-            exit={{   scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
             <Heart
@@ -89,7 +88,7 @@ function AttendanceButton({
           key={hovered && !selected ? 'hover' : 'default'}
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{   opacity: 0, y: -4 }}
+          exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.18 }}
           className="font-sans text-[10px] tracking-widest uppercase text-center leading-relaxed"
         >
@@ -131,8 +130,8 @@ export default function RSVPSection() {
               <h3 className="font-serif text-2xl sm:text-3xl text-charcoal mb-4">Cảm ơn bạn!</h3>
               <p className="font-sans text-sm text-charcoal-light leading-relaxed px-4">
                 {state.attending
-                  ? 'Chúng tôi rất vui khi được đón tiếp bạn. Hẹn gặp bạn sớm! ♡'
-                  : 'Chúng tôi hiểu và trân trọng sự quan tâm của bạn!'}
+                  ? 'Chúng mình rất vui khi được đón tiếp bạn. Hẹn gặp bạn sớm! ♡'
+                  : 'Chúng mình hiểu và trân trọng sự quan tâm của bạn!'}
               </p>
             </motion.div>
           ) : (
@@ -150,7 +149,7 @@ export default function RSVPSection() {
                   Bạn có tham dự không?
                 </p>
                 <div className="flex flex-col xs:flex-row gap-3">
-                  <AttendanceButton value={true}  selected={attending === true}  onClick={() => setAttending(true)} />
+                  <AttendanceButton value={true} selected={attending === true} onClick={() => setAttending(true)} />
                   <AttendanceButton value={false} selected={attending === false} onClick={() => setAttending(false)} />
                 </div>
               </div>

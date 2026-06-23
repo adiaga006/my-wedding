@@ -90,8 +90,15 @@ export default function InviteIntro({
       <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 w-10 h-10 sm:w-14 sm:h-14 border-b border-l border-gold/40 pointer-events-none" />
       <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 w-10 h-10 sm:w-14 sm:h-14 border-b border-r border-gold/40 pointer-events-none" />
 
-      {/* Nội dung trung tâm */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 xs:px-8 sm:px-12 max-w-xs xs:max-w-sm sm:max-w-lg w-full py-8">
+      {/* Card nổi trung tâm */}
+      <div
+        className="relative z-10 flex flex-col items-center text-center mx-4 w-full max-w-xs xs:max-w-sm sm:max-w-md rounded-2xl sm:rounded-3xl px-6 xs:px-8 sm:px-12 py-8 sm:py-12"
+        style={{
+          background: 'rgba(247,252,244,0.92)',
+          backdropFilter: 'blur(12px)',
+          boxShadow: '0 8px 40px rgba(28,46,20,0.18), 0 2px 12px rgba(28,46,20,0.10), 0 0 0 1px rgba(200,168,74,0.15)',
+        }}
+      >
 
         {/* Nhãn trên */}
         <motion.p {...fadeUp(0.3)}
@@ -155,14 +162,16 @@ export default function InviteIntro({
         <motion.div {...fadeUp(1.25)}>
           <motion.button
             onClick={handleOpen}
-            whileHover={{ scale: 1.04 }}
+            whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="relative px-8 sm:px-10 py-3.5 font-sans text-[10px] sm:text-xs tracking-[0.35em] uppercase text-gold border border-gold/60 overflow-hidden group transition-colors duration-300 min-h-[44px]"
+            className="relative px-10 sm:px-12 py-3.5 font-sans text-[10px] sm:text-xs tracking-[0.35em] uppercase overflow-hidden group min-h-[44px] rounded-sm"
+            style={{ background: '#1C2E14', color: '#F7FCF4' }}
           >
-            <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
-            <span className="relative group-hover:text-cream transition-colors duration-300">
-              Mở thiệp ♡
-            </span>
+            <span
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ background: 'linear-gradient(135deg, #C8A84A, #A6852E)' }}
+            />
+            <span className="relative">Mở thiệp ♡</span>
           </motion.button>
         </motion.div>
       </div>
