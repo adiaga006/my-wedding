@@ -38,10 +38,12 @@
     from { opacity: 0; transform: translateY(30px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  @keyframes vinyl-spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
+}
+
+/* ── Keyframes (must be outside @theme to be accessible as CSS animation-name) ── */
+@keyframes vinyl-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 /* ── Base styles ── */
