@@ -47,25 +47,42 @@ function MapModal({ embedUrl, name, onClose }: { embedUrl: string; name: string;
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/75 backdrop-blur-sm p-0 sm:p-6"
       onClick={onClose}
     >
       <motion.div
-        initial={{ y: '100%', opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: '100%', opacity: 0 }}
-        transition={{ type: 'spring', stiffness: 280, damping: 30 }}
-        className="relative w-full sm:max-w-3xl bg-white shadow-2xl rounded-t-2xl sm:rounded-none overflow-hidden"
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '100%' }}
+        transition={{ type: 'spring', stiffness: 300, damping: 32 }}
+        className="relative w-full sm:max-w-3xl bg-white shadow-2xl rounded-t-3xl sm:rounded-2xl overflow-hidden flex flex-col"
+        style={{ height: '82svh', maxHeight: '82svh' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-blush/20">
-          <p className="font-serif text-base sm:text-lg text-charcoal">{name}</p>
-          <button onClick={onClose} className="w-9 h-9 flex items-center justify-center text-charcoal-light hover:text-charcoal transition-colors" aria-label="Đóng">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-blush/20 flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-4 bg-gold rounded-full" />
+            <p className="font-serif text-base sm:text-lg text-charcoal">{name}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-blush/20 text-charcoal-light hover:text-charcoal transition-colors"
+            aria-label="Đóng"
+          >
             <X size={20} />
           </button>
         </div>
-        <div className="relative w-full" style={{ paddingBottom: '62%' }}>
-          <iframe src={embedUrl} className="absolute inset-0 w-full h-full border-0" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title={`Bản đồ ${name}`} />
+        {/* Map — fills remaining height */}
+        <div className="flex-1 min-h-0">
+          <iframe
+            src={embedUrl}
+            className="w-full h-full border-0"
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title={`Bản đồ ${name}`}
+          />
         </div>
       </motion.div>
     </motion.div>

@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'motion/react'
+import { motion, AnimatePresence } from 'motion/react'
 import Image from 'next/image'
-import { Copy, CheckCheck, Gift } from 'lucide-react'
+import { Copy, CheckCheck, Gift, X, ZoomIn } from 'lucide-react'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
 import { urlFor } from '@/sanity/lib/image'
@@ -18,7 +18,60 @@ interface BankAccount {
   qrCode?: { asset: { _ref: string } }
 }
 
-function AccountCard({ account, index, compact }: { account: BankAccount; index: number; compact?: boolean }) {
+/* ── QR Zoom Modal ── */
+function QrModal({ src, owner, onClose }: { src: string; owner: string; onClose: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-5 sm:p-8"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.82, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.82, opacity: 0 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+        className="relative bg-white rounded-2xl shadow-2xl p-5 w-full max-w-[320px] sm:max-w-sm"
+        onClick={(e: React.MouseEvent) => e.stopPropagation()}
+      >
+        {/* Nút đóng */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full bg-cream hover:bg-blush/30 text-charcoal-light transition-colors"
+          aria-label="Đóng"
+        >
+          <X size={18} />
+        </button>
+
+        {/* Tên */}
+        <p className="font-serif text-charcoal text-center text-lg mb-4 pr-8">{owner}</p>
+
+        {/* QR full size */}
+        <div className="w-full aspect-square">
+          <Image
+            src={src}
+            alt={`QR ${owner}`}
+            width={600}
+            height={600}
+            className="w-full h-full object-contain"
+          />
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+/* ── Account Card ── */
+function AccountCard({
+  account, index, compact, onZoom,
+}: {
+  account: BankAccount
+  index: number
+  compact?: boolean
+  onZoom: (src: string, owner: string) => void
+}) {
   const [copied, setCopied] = useState(false)
 
   const copyAccount = () => {
@@ -26,6 +79,8 @@ function AccountCard({ account, index, compact }: { account: BankAccount; index:
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
+
+  const qrSrc = account.qrCode ? urlFor(account.qrCode).width(800).url() : null
 
   return (
     <motion.div
@@ -52,16 +107,27 @@ function AccountCard({ account, index, compact }: { account: BankAccount; index:
           {account.owner}
         </p>
 
-        {/* QR Code — container vuông cố định, object-contain để không crop */}
-        {account.qrCode && (
-          <div className="relative w-full aspect-square mb-4 bg-white">
+        {/* QR Code — hover effect + click to zoom */}
+        {qrSrc && (
+          <div
+            className="relative w-full aspect-square mb-4 bg-white cursor-zoom-in group/qr overflow-hidden"
+            onClick={() => onZoom(qrSrc, account.owner)}
+          >
             <Image
-              src={urlFor(account.qrCode).width(800).url()}
+              src={qrSrc}
               alt={`QR ${account.owner}`}
               fill
-              className="object-contain p-1"
+              className="object-contain p-1 transition-transform duration-300 group-hover/qr:scale-[1.04]"
               sizes={compact ? '45vw' : '(max-width: 640px) 90vw, 320px'}
             />
+            {/* Gold border on hover */}
+            <div className="absolute inset-0 border-2 border-gold/0 group-hover/qr:border-gold/50 transition-colors duration-300 pointer-events-none" />
+            {/* Zoom hint overlay */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/qr:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <div className="bg-black/30 backdrop-blur-[2px] rounded-full p-2.5">
+                <ZoomIn size={18} className="text-white" />
+              </div>
+            </div>
           </div>
         )}
 
@@ -89,7 +155,7 @@ function AccountCard({ account, index, compact }: { account: BankAccount; index:
           </motion.p>
         )}
 
-        {/* Tên ngân hàng + tên tài khoản — dưới STK */}
+        {/* Tên ngân hàng + tên tài khoản */}
         <div className="mt-3 text-center space-y-0.5">
           <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-gold">{account.bankName}</p>
           <p className="font-sans text-xs text-charcoal-light">{account.accountName}</p>
@@ -99,8 +165,10 @@ function AccountCard({ account, index, compact }: { account: BankAccount; index:
   )
 }
 
+/* ── Section ── */
 export default function GiftSection({ accounts }: { accounts: BankAccount[] }) {
   const isPair = accounts.length === 2
+  const [zoomed, setZoomed] = useState<{ src: string; owner: string } | null>(null)
 
   return (
     <SectionWrapper id="gift" className="section-padding bg-blush/10">
@@ -122,15 +190,15 @@ export default function GiftSection({ accounts }: { accounts: BankAccount[] }) {
           <p className="font-serif italic text-charcoal-light">Thông tin sẽ được cập nhật sớm</p>
         </div>
       ) : isPair ? (
-        /* 2 QR: cạnh nhau từ xs trở lên, mỗi card nhỏ gọn */
         <div className="max-w-2xl mx-auto">
           <div className="grid grid-cols-2 gap-3 xs:gap-4 sm:gap-6">
             {accounts.map((acc, i) => (
-              <AccountCard key={acc._id} account={acc} index={i} compact />
+              <AccountCard
+                key={acc._id} account={acc} index={i} compact
+                onZoom={(src, owner) => setZoomed({ src, owner })}
+              />
             ))}
           </div>
-
-          {/* Ornament giữa 2 QR — hiện trên desktop */}
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -141,16 +209,29 @@ export default function GiftSection({ accounts }: { accounts: BankAccount[] }) {
           </motion.p>
         </div>
       ) : (
-        /* 1 hoặc 3+ tài khoản */
         <div className={`mx-auto grid gap-5 sm:gap-8 ${accounts.length === 1
-            ? 'max-w-xs grid-cols-1'
-            : 'max-w-3xl grid-cols-1 sm:grid-cols-2'
-          }`}>
+          ? 'max-w-xs grid-cols-1'
+          : 'max-w-3xl grid-cols-1 sm:grid-cols-2'
+        }`}>
           {accounts.map((acc, i) => (
-            <AccountCard key={acc._id} account={acc} index={i} />
+            <AccountCard
+              key={acc._id} account={acc} index={i}
+              onZoom={(src, owner) => setZoomed({ src, owner })}
+            />
           ))}
         </div>
       )}
+
+      {/* QR Zoom Modal */}
+      <AnimatePresence>
+        {zoomed && (
+          <QrModal
+            src={zoomed.src}
+            owner={zoomed.owner}
+            onClose={() => setZoomed(null)}
+          />
+        )}
+      </AnimatePresence>
     </SectionWrapper>
   )
 }
