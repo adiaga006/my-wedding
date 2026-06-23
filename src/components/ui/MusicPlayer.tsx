@@ -35,7 +35,7 @@ interface MusicPlayerProps {
 
 export default function MusicPlayer({ playlist }: MusicPlayerProps) {
   const [playing, setPlaying] = useState(true)
-  const [visible, setVisible] = useState(false)
+  const [showControls, setShowControls] = useState(false)
   const [trackIndex, setTrackIndex] = useState(0)
   const [shuffled, setShuffled] = useState<string[]>([])
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -47,8 +47,9 @@ export default function MusicPlayer({ playlist }: MusicPlayerProps) {
     setShuffled(shuffle(ids))
   }, [playlist])
 
+  // Hiện controls sau 800ms — iframe đã mount và load xong rồi
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 1500)
+    const t = setTimeout(() => setShowControls(true), 800)
     return () => clearTimeout(t)
   }, [])
 
@@ -101,13 +102,13 @@ export default function MusicPlayer({ playlist }: MusicPlayerProps) {
     ? shuffled.filter((_, i) => i !== trackIndex).join(',')
     : currentId
 
-  if (!currentId || !visible) return null
+  if (!currentId) return null
 
   return (
     <>
-      {/* Hidden YouTube iframe */}
+      {/* Hidden YouTube iframe — mount ngay, không chờ */}
       <iframe
-        key={currentId} // re-mount khi đổi bài
+        key={currentId}
         ref={iframeRef}
         src={`https://www.youtube.com/embed/${currentId}?enablejsapi=1&autoplay=1&loop=${shuffled.length === 1 ? 1 : 0}&playlist=${playlistParam}&controls=0&mute=0&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`}
         allow="autoplay; encrypted-media"
@@ -116,8 +117,8 @@ export default function MusicPlayer({ playlist }: MusicPlayerProps) {
         title="background music"
       />
 
-      {/* Controls — bottom-safe-area cho iPhone notch */}
-      <div className="fixed bottom-6 right-4 sm:right-6 z-50 flex items-center gap-2" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      {/* Controls — chỉ hiện sau khi iframe đã load */}
+      {showControls && <div className="fixed bottom-6 right-4 sm:right-6 z-50 flex items-center gap-2" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {/* Skip next — chỉ hiện khi có nhiều bài */}
         {shuffled.length > 1 && (
           <motion.button
@@ -158,7 +159,7 @@ export default function MusicPlayer({ playlist }: MusicPlayerProps) {
             <VolumeX size={18} className="text-cream/60" />
           )}
         </motion.button>
-      </div>
+      </div>}
 
       <AutoplayHint playing={playing} onPlay={() => { sendCommand('playVideo'); setPlaying(true) }} />
     </>
