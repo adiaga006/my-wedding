@@ -43,18 +43,19 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/45 to-black/70" />
 
       {/* Corner ornaments */}
-      <div className="absolute top-5 left-5 sm:top-8 sm:left-8 w-10 h-10 sm:w-16 sm:h-16 border-t-2 border-l-2 border-cream/30" />
-      <div className="absolute top-5 right-5 sm:top-8 sm:right-8 w-10 h-10 sm:w-16 sm:h-16 border-t-2 border-r-2 border-cream/30" />
+      <div className="absolute top-16 left-5 sm:top-20 sm:left-8 w-10 h-10 sm:w-16 sm:h-16 border-t-2 border-l-2 border-cream/30" />
+      <div className="absolute top-16 right-5 sm:top-20 sm:right-8 w-10 h-10 sm:w-16 sm:h-16 border-t-2 border-r-2 border-cream/30" />
       <div className="absolute bottom-16 left-5 sm:bottom-8 sm:left-8 w-10 h-10 sm:w-16 sm:h-16 border-b-2 border-l-2 border-cream/30" />
       <div className="absolute bottom-16 right-5 sm:bottom-8 sm:right-8 w-10 h-10 sm:w-16 sm:h-16 border-b-2 border-r-2 border-cream/30" />
 
       {/* Content — pt đẩy khỏi navbar (h-14 sm:h-16 md:h-20) */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 xs:px-6 w-full max-w-4xl mx-auto py-10 sm:py-14">
+      <div className="relative z-10 flex flex-col items-center text-center px-4 xs:px-6 w-full max-w-4xl mx-auto pb-24 sm:pb-28">
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           className="font-sans text-[10px] sm:text-xs tracking-[0.35em] sm:tracking-[0.4em] uppercase text-cream/70 mb-6 sm:mb-8"
+          style={{ marginTop: '40px' }}
         >
           Lễ thành hôn
         </motion.p>
