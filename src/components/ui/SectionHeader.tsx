@@ -7,7 +7,7 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ eyebrow, title, ornament = '❧', dark = false }: SectionHeaderProps) {
   return (
-    <div className="text-center mb-16">
+    <div className="text-center mb-10 sm:mb-14 md:mb-16">
       <p className={`section-subtitle ${dark ? '!text-cream/40' : ''}`}>{eyebrow}</p>
       <h2 className={`section-title ${dark ? '!text-cream' : ''}`}>{title}</h2>
       <div className="divider-ornament mt-6">

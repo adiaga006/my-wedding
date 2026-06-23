@@ -11,15 +11,15 @@
   --breakpoint-2xl: 1536px;
 
   /* Colors */
-  --color-cream:         #FAF8F5;
-  --color-blush:         #F2C4CE;
-  --color-blush-dark:    #E8A0B0;
-  --color-sage:          #B7C4B1;
-  --color-sage-dark:     #8FA888;
-  --color-gold:          #C9A96E;
-  --color-gold-dark:     #A67C52;
-  --color-charcoal:      #3D3D3D;
-  --color-charcoal-light:#6B6B6B;
+  --color-cream:         #F7FCF4;
+  --color-blush:         #C2E8B0;
+  --color-blush-dark:    #82CC6A;
+  --color-sage:          #A8DC98;
+  --color-sage-dark:     #5CB84A;
+  --color-gold:          #C8A84A;
+  --color-gold-dark:     #A6852E;
+  --color-charcoal:      #1C2E14;
+  --color-charcoal-light:#4A6038;
 
   /* Fonts — reference next/font CSS vars */
   --font-serif:    var(--font-cormorant), Georgia, serif;
@@ -81,9 +81,13 @@
 @utility section-padding {
   padding-top: 4.5rem;
   padding-bottom: 4.5rem;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 
+  @media (min-width: 375px) {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
   @media (min-width: 480px) {
     padding-left: 1.75rem;
     padding-right: 1.75rem;

@@ -67,7 +67,7 @@ export default function WeddingPartySection({ members }: { members: PartyMember[
             <div className="flex-1 h-px bg-gradient-to-l from-transparent to-blush/40" />
           </div>
           {/* 2 col mobile, 3 col sm, 4 col md */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
             {groomTeam.map((m, i) => <MemberCard key={m._id} member={m} index={i} />)}
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function WeddingPartySection({ members }: { members: PartyMember[
             <p className="font-serif text-xl sm:text-2xl italic text-charcoal-light whitespace-nowrap">Phù dâu</p>
             <div className="flex-1 h-px bg-gradient-to-l from-transparent to-blush/40" />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
             {brideTeam.map((m, i) => <MemberCard key={m._id} member={m} index={i} />)}
           </div>
         </div>

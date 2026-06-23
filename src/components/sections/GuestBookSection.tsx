@@ -22,7 +22,7 @@ function MessageCard({ msg, index }: { msg: GuestMessage; index: number }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
-      className="group relative flex flex-col gap-4 bg-white p-6 sm:p-7 shadow-sm hover:shadow-md transition-shadow duration-300 border-l-2 border-blush hover:border-gold rounded-lg"
+      className="group relative flex flex-col gap-4 bg-white p-4 xs:p-5 sm:p-7 shadow-sm hover:shadow-md transition-shadow duration-300 border-l-2 border-blush hover:border-gold rounded-lg"
     >
       {/* Faint giant quote */}
       <span className="absolute -top-1 right-4 font-serif text-[80px] leading-none text-blush/10 select-none pointer-events-none">

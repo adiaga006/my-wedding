@@ -85,7 +85,7 @@ export default function StorySection({ items }: { items: StoryItem[] }) {
         {/* Mobile: left border timeline */}
         <div className="md:hidden absolute left-1.5 top-0 bottom-0 w-px bg-gradient-to-b from-blush/20 via-blush/50 to-blush/20" />
 
-        <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 pl-6 md:pl-0">
+        <div className="flex flex-col gap-12 sm:gap-16 md:gap-20 pl-5 xs:pl-6 md:pl-0">
           {items.map((item, i) => (
             <TimelineItem key={item._id} item={item} index={i} />
           ))}

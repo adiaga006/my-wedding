@@ -48,7 +48,7 @@ export default function Navbar() {
             : 'bg-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 h-14 sm:h-16 md:h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 lg:px-16 h-14 sm:h-16 md:h-20 flex items-center justify-between">
           {/* Logo */}
           <a
             href="#hero"

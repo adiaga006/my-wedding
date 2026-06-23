@@ -118,7 +118,7 @@ export default function MusicPlayer({ playlist }: MusicPlayerProps) {
       />
 
       {/* Controls — chỉ hiện sau khi iframe đã load */}
-      {showControls && <div className="fixed bottom-6 right-4 sm:right-6 z-50 flex items-center gap-2" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      {showControls && <div className="fixed right-4 sm:right-6 z-50 flex items-center gap-2" style={{ bottom: 'max(1.5rem, calc(1rem + env(safe-area-inset-bottom)))' }}>
         {/* Skip next — chỉ hiện khi có nhiều bài */}
         {shuffled.length > 1 && (
           <motion.button

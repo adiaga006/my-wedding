@@ -32,7 +32,7 @@ function AccountCard({ account, index }: { account: BankAccount; index: number }
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, delay: index * 0.12 }}
-      className="bg-white border border-blush/20 px-6 sm:px-8 py-8 sm:py-10 text-center"
+      className="bg-white border border-blush/20 px-4 xs:px-6 sm:px-8 py-8 sm:py-10 text-center"
     >
       {account.qrCode && (
         <div className="relative w-36 h-36 sm:w-44 sm:h-44 mx-auto mb-5 sm:mb-6">

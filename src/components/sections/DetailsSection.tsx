@@ -77,7 +77,7 @@ function FamilyBlock({ label, family, fullName, title }: { label: string; family
   if (!hasInfo && !fullName) return null
   return (
     <div className="text-center">
-      <p className="font-sans text-[9px] xs:text-[10px] tracking-[0.35em] uppercase text-gold mb-3">{label}</p>
+      <p className="font-sans text-[10px] xs:text-xs tracking-[0.35em] uppercase text-gold mb-3">{label}</p>
       {family?.fatherName && (
         <p className="font-sans text-[11px] xs:text-xs text-charcoal leading-relaxed">
           <span className="text-charcoal-light">Ông:</span> <span className="font-medium">{family.fatherName}</span>
@@ -125,7 +125,7 @@ export default function DetailsSection({
             viewport={{ once: true }}
             className="mb-10 sm:mb-14"
           >
-            <div className="border border-blush/30 bg-white rounded-sm px-5 xs:px-8 sm:px-10 py-8 sm:py-10">
+            <div className="border border-blush/30 bg-white rounded-sm px-4 xs:px-7 sm:px-10 py-8 sm:py-10">
               {/* Two families */}
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-5 xs:gap-4 sm:gap-8 mb-6 sm:mb-8">
                 <FamilyBlock label="Nhà Trai" family={groomFamily} fullName={groomFullName} title={groomTitle} />
@@ -187,12 +187,12 @@ export default function DetailsSection({
           viewport={{ once: true }}
           className="text-center mb-10 sm:mb-14"
         >
-          <p className="font-sans text-[10px] sm:text-xs tracking-[0.45em] uppercase text-charcoal-light mb-4">
+          <p className="font-sans text-sm sm:text-base tracking-[0.45em] uppercase text-charcoal-light mb-4">
             {weekday}
           </p>
           <p
             className="font-serif font-light text-charcoal leading-none mb-4"
-            style={{ fontSize: 'clamp(2.5rem, 11vw, 5rem)', letterSpacing: 'clamp(0.02em, 1vw, 0.1em)' }}
+            style={{ fontSize: 'clamp(2.2rem, 9vw, 4.5rem)', letterSpacing: 'clamp(0.02em, 0.8vw, 0.08em)' }}
           >
             {dateNum}
           </p>
@@ -210,17 +210,16 @@ export default function DetailsSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="relative bg-white shadow-sm hover:shadow-lg transition-shadow duration-500 overflow-hidden"
+            className="relative bg-white shadow-sm hover:shadow-lg transition-shadow duration-500"
           >
-            {/* Gold top accent */}
-            <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-gold to-transparent" />
+            <div className="px-6 xs:px-10 sm:px-14 md:px-16 pt-8 sm:pt-10 pb-10 sm:pb-12 text-center">
 
-            {/* Top diamond */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3">
-              <div className="w-5 h-5 border-2 border-gold rotate-45" />
-            </div>
-
-            <div className="px-6 xs:px-10 sm:px-14 md:px-16 pt-10 sm:pt-12 pb-10 sm:pb-12 text-center">
+              {/* Top ornament: line ◇ line */}
+              <div className="flex items-center gap-4 mb-8 sm:mb-10">
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold/70" />
+                <div className="w-4 h-4 border border-gold rotate-45 flex-shrink-0" />
+                <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold/70" />
+              </div>
 
               {/* Venue name + hall */}
               {venue.name && (
@@ -259,14 +258,14 @@ export default function DetailsSection({
                 ].filter(Boolean) as { label: string; value: string }[]
 
                 return (
-                  <div className="mb-9 mx-auto max-w-xs">
+                  <div className="mb-9 mx-auto max-w-[18rem] xs:max-w-xs sm:max-w-sm">
                     <div className={`grid border border-blush/30 divide-x divide-blush/30 ${times.length === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                       {times.map((t) => (
                         <div key={t.label} className="flex flex-col items-center gap-2 py-4 px-3">
                           <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-charcoal-light">{t.label}</p>
                           <div className="flex items-center gap-1.5">
                             <Clock size={12} className="text-gold" />
-                            <p className="font-serif text-2xl sm:text-3xl text-charcoal leading-none">{t.value}</p>
+                            <p className="font-sans font-light text-2xl sm:text-3xl text-charcoal leading-none tracking-widest tabular-nums">{t.value}</p>
                           </div>
                         </div>
                       ))}
@@ -303,8 +302,6 @@ export default function DetailsSection({
               </div>
             </div>
 
-            {/* Gold bottom accent */}
-            <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-gold to-transparent" />
           </motion.div>
         ) : (
           <p className="text-center font-serif italic text-charcoal-light text-xl sm:text-2xl py-16">
