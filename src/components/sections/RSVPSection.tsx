@@ -2,14 +2,117 @@
 
 import { useState, useActionState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { CheckCircle, Loader2, Heart, HeartOff } from 'lucide-react'
+import { CheckCircle, Loader2, Heart, HeartOff, Sparkles } from 'lucide-react'
 import { submitRSVP } from '@/actions/rsvp'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
 
+const YES_HOVER_LABEL = 'Thật tuyệt vời! ✨'
+const NO_HOVER_LABEL  = 'Chúng tôi sẽ nhớ bạn...'
+
+function AttendanceButton({
+  value,
+  selected,
+  onClick,
+}: {
+  value: boolean
+  selected: boolean
+  onClick: () => void
+}) {
+  const [hovered, setHovered] = useState(false)
+  const isYes = value
+
+  const defaultLabel = isYes ? 'Có, tôi sẽ đến' : 'Rất tiếc, tôi bận'
+  const hoverLabel   = isYes ? YES_HOVER_LABEL : NO_HOVER_LABEL
+
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      whileTap={{ scale: 0.97 }}
+      className={`relative flex-1 flex flex-col items-center gap-3 py-6 min-h-[96px] overflow-hidden border transition-colors duration-300 ${
+        selected
+          ? isYes
+            ? 'bg-gold/10 border-gold text-gold'
+            : 'bg-charcoal text-cream border-charcoal'
+          : 'bg-transparent border-charcoal/15 text-charcoal-light'
+      }`}
+    >
+      {/* Shimmer on hover (yes only) */}
+      {isYes && hovered && !selected && (
+        <motion.div
+          initial={{ opacity: 0, x: '-100%' }}
+          animate={{ opacity: 1, x: '100%' }}
+          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-gold/8 to-transparent pointer-events-none"
+        />
+      )}
+
+      {/* Icon */}
+      <AnimatePresence mode="wait">
+        {hovered && !selected ? (
+          <motion.span
+            key="hovered"
+            initial={{ scale: 0.5, opacity: 0, rotate: isYes ? -20 : 0 }}
+            animate={{ scale: 1,   opacity: 1, rotate: 0 }}
+            exit={{   scale: 0.5, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+          >
+            {isYes
+              ? <Sparkles size={22} strokeWidth={1.25} className="text-gold" />
+              : <HeartOff size={22} strokeWidth={1.25} className="text-charcoal-light" />
+            }
+          </motion.span>
+        ) : (
+          <motion.span
+            key="default"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1,   opacity: 1 }}
+            exit={{   scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Heart
+              size={22}
+              strokeWidth={1.25}
+              fill={selected ? (isYes ? '#C9A96E' : 'currentColor') : 'none'}
+              className={selected && isYes ? 'text-gold' : ''}
+            />
+          </motion.span>
+        )}
+      </AnimatePresence>
+
+      {/* Label */}
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={hovered && !selected ? 'hover' : 'default'}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{   opacity: 0, y: -4 }}
+          transition={{ duration: 0.18 }}
+          className="font-sans text-[10px] tracking-widest uppercase text-center leading-relaxed"
+        >
+          {hovered && !selected ? hoverLabel : defaultLabel}
+        </motion.span>
+      </AnimatePresence>
+
+      {/* Selected underline */}
+      {selected && (
+        <motion.div
+          layoutId="rsvp-selected"
+          className={`absolute bottom-0 left-0 right-0 h-0.5 ${isYes ? 'bg-gold' : 'bg-cream/40'}`}
+        />
+      )}
+    </motion.button>
+  )
+}
+
 export default function RSVPSection() {
   const [attending, setAttending] = useState<boolean | null>(null)
   const [state, action, isPending] = useActionState(submitRSVP, null)
+
+  const submitLabel = attending === false ? 'Xác nhận không tham dự' : 'Xác nhận tham dự'
 
   return (
     <SectionWrapper id="rsvp" className="section-padding bg-cream">
@@ -42,35 +145,13 @@ export default function RSVPSection() {
             >
               <input type="hidden" name="attending" value={String(attending ?? false)} />
 
-              {/* Attending choice — elegant minimal */}
               <div>
                 <p className="font-sans text-xs tracking-widest uppercase text-charcoal-light mb-4 text-center">
                   Bạn có tham dự không?
                 </p>
                 <div className="flex flex-col xs:flex-row gap-3">
-                  {[
-                    { label: 'Có, tôi sẽ đến', value: true,  Icon: Heart },
-                    { label: 'Rất tiếc, tôi bận', value: false, Icon: HeartOff },
-                  ].map(({ label, value, Icon }) => (
-                    <button
-                      key={String(value)}
-                      type="button"
-                      onClick={() => setAttending(value)}
-                      className={`flex-1 flex flex-col items-center gap-2 py-5 min-h-[80px] font-sans text-[10px] tracking-widest uppercase border transition-all duration-300 ${
-                        attending === value
-                          ? 'bg-charcoal text-cream border-charcoal'
-                          : 'bg-transparent text-charcoal-light border-charcoal/20 hover:border-charcoal/50 hover:text-charcoal'
-                      }`}
-                    >
-                      <Icon
-                        size={20}
-                        strokeWidth={1.25}
-                        fill={attending === value ? 'currentColor' : 'none'}
-                        className="transition-all duration-300"
-                      />
-                      {label}
-                    </button>
-                  ))}
+                  <AttendanceButton value={true}  selected={attending === true}  onClick={() => setAttending(true)} />
+                  <AttendanceButton value={false} selected={attending === false} onClick={() => setAttending(false)} />
                 </div>
               </div>
 
@@ -108,7 +189,9 @@ export default function RSVPSection() {
                   disabled={isPending || attending === null}
                   className="btn-primary w-full xs:w-auto px-10 disabled:opacity-50"
                 >
-                  {isPending ? <><Loader2 size={14} className="animate-spin" /> Đang gửi...</> : 'Xác nhận tham dự'}
+                  {isPending
+                    ? <><Loader2 size={14} className="animate-spin" /> Đang gửi...</>
+                    : submitLabel}
                 </button>
               </div>
             </motion.form>

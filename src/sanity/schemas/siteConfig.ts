@@ -28,6 +28,36 @@ export const siteConfig = defineType({
       description: 'Thêm nhiều bài — website sẽ phát ngẫu nhiên hoặc lần lượt',
     }),
     defineField({
+      name: 'sharePreview',
+      title: 'Xem trước khi chia sẻ link',
+      type: 'object',
+      description: 'Hiển thị khi gửi link qua Zalo, Facebook, iMessage...',
+      fields: [
+        defineField({
+          name: 'ogTitle',
+          title: 'Tiêu đề',
+          type: 'string',
+          description: 'VD: Duy & Chi — Trân trọng kính mời',
+          initialValue: 'Duy & Chi — Đám cưới của chúng tôi',
+        }),
+        defineField({
+          name: 'ogDescription',
+          title: 'Mô tả',
+          type: 'text',
+          rows: 3,
+          description: 'Dòng mô tả hiện bên dưới tiêu đề khi share',
+          initialValue: 'Chúng tôi trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Duy & Chi ♡',
+        }),
+        defineField({
+          name: 'ogImage',
+          title: 'Ảnh preview (khuyến nghị 1200×630px)',
+          type: 'image',
+          description: 'Ảnh hiện khi gửi link. Nên dùng ảnh cưới đẹp, tỷ lệ 1.91:1',
+          options: { hotspot: true },
+        }),
+      ],
+    }),
+    defineField({
       name: 'ceremonyVenue',
       title: 'Địa điểm Lễ',
       type: 'object',

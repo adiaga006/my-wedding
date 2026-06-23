@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { client } from '@/sanity/lib/client'
 import {
   SITE_CONFIG_QUERY,
@@ -8,6 +9,7 @@ import {
   FAQ_QUERY,
   BANK_INFO_QUERY,
 } from '@/sanity/queries'
+import { urlFor } from '@/sanity/lib/image'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import HeroSection from '@/components/sections/HeroSection'
@@ -22,6 +24,36 @@ import FAQSection from '@/components/sections/FAQSection'
 import MusicPlayer from '@/components/ui/MusicPlayer'
 
 export const revalidate = 60
+
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await client.fetch(SITE_CONFIG_QUERY)
+  const preview = config?.sharePreview
+
+  const title       = preview?.ogTitle       || 'Duy & Chi — Đám cưới của chúng tôi'
+  const description = preview?.ogDescription || 'Chúng tôi trân trọng kính mời bạn đến chung vui trong ngày trọng đại của Duy & Chi ♡'
+  const imageUrl    = preview?.ogImage
+    ? urlFor(preview.ogImage).width(1200).height(630).fit('crop').url()
+    : null
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      ...(imageUrl && {
+        images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
+      }),
+    },
+    twitter: {
+      card: imageUrl ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      ...(imageUrl && { images: [imageUrl] }),
+    },
+  }
+}
 
 export default async function HomePage() {
   const [config, stories, gallery, party, guestbook, faqs, bankAccounts] = await Promise.all([
