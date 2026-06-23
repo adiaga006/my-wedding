@@ -229,7 +229,7 @@ export default function VinylDisc() {
             ))}
           </div>
         )}
-        <p className="font-sans text-[11px] sm:text-xs text-cream/55 tracking-wide truncate min-w-0">
+        <p className="font-sans text-[11px] sm:text-xs text-cream/55 tracking-wide leading-snug">
           {currentTitle || '♪'}
         </p>
       </div>
