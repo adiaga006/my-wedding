@@ -2,8 +2,7 @@ export const SITE_CONFIG_QUERY = `*[_type == "siteConfig"][0]{
   coupleName, groomName, brideName, weddingDate, heroImage, heroQuote,
   musicPlaylist[]{ url, title },
   sharePreview{ ogTitle, ogDescription, ogImage },
-  ceremonyVenue{ name, address, time, mapUrl, mapEmbed },
-  receptionVenue{ name, address, time, mapUrl, mapEmbed }
+  ceremonyVenue{ name, address, time, mapUrl, mapEmbed }
 }`
 
 export const STORIES_QUERY = `*[_type == "story"] | order(order asc) {

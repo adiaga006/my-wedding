@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { motion, useInView, AnimatePresence } from 'motion/react'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import { MapPin, Clock, Calendar, Map, X } from 'lucide-react'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
@@ -15,8 +15,7 @@ interface Venue {
 }
 
 interface DetailsProps {
-  ceremonyVenue?: Venue
-  receptionVenue?: Venue
+  venue?: Venue
   weddingDate: string
   groomName: string
   brideName: string
@@ -49,7 +48,6 @@ function MapModal({ embedUrl, name, onClose }: { embedUrl: string; name: string;
             <X size={20} />
           </button>
         </div>
-        {/* Map iframe — 56% ratio trên desktop, taller trên mobile */}
         <div className="relative w-full" style={{ paddingBottom: '62%' }}>
           <iframe
             src={embedUrl}
@@ -65,74 +63,9 @@ function MapModal({ embedUrl, name, onClose }: { embedUrl: string; name: string;
   )
 }
 
-function VenueCard({ venue, label, delay }: { venue: Venue; label: string; delay: number }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px 0px' })
+export default function DetailsSection({ venue, weddingDate, groomName, brideName }: DetailsProps) {
   const [showMap, setShowMap] = useState(false)
 
-  return (
-    <>
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 40 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, delay }}
-        className="relative bg-white border border-blush/30 px-6 sm:px-10 py-10 sm:py-12 text-center group hover:shadow-xl transition-shadow duration-500"
-      >
-        {/* Top ornament */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 border-2 border-gold rotate-45" />
-        </div>
-
-        <p className="font-sans text-[10px] tracking-[0.4em] uppercase text-gold mb-3 sm:mb-4">{label}</p>
-        <h3 className="font-serif text-2xl sm:text-3xl text-charcoal mb-5 sm:mb-6 leading-snug">{venue.name}</h3>
-
-        <div className="flex flex-col gap-3 items-center text-charcoal-light mb-7 sm:mb-8">
-          <div className="flex items-center gap-2 font-sans text-sm">
-            <Clock size={14} className="text-gold flex-shrink-0" />
-            <span>{venue.time}</span>
-          </div>
-          <div className="flex items-start gap-2 font-sans text-sm max-w-xs text-center">
-            <MapPin size={14} className="text-gold flex-shrink-0 mt-0.5" />
-            <span className="text-left">{venue.address}</span>
-          </div>
-        </div>
-
-        {/* Buttons — stack on mobile, row on sm+ */}
-        <div className="flex flex-col xs:flex-row gap-3 justify-center items-center">
-          {venue.mapEmbed && (
-            <button onClick={() => setShowMap(true)} className="btn-primary text-[11px] w-full xs:w-auto">
-              <Map size={12} />
-              Xem bản đồ
-            </button>
-          )}
-          {venue.mapUrl && (
-            <a
-              href={venue.mapUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-outline text-[11px] w-full xs:w-auto"
-            >
-              <MapPin size={12} />
-              Mở Google Maps
-            </a>
-          )}
-        </div>
-
-        <div className="absolute bottom-3 left-3 w-5 h-5 border-b border-l border-blush/40" />
-        <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-blush/40" />
-      </motion.div>
-
-      <AnimatePresence>
-        {showMap && venue.mapEmbed && (
-          <MapModal embedUrl={venue.mapEmbed} name={venue.name} onClose={() => setShowMap(false)} />
-        )}
-      </AnimatePresence>
-    </>
-  )
-}
-
-export default function DetailsSection({ ceremonyVenue, receptionVenue, weddingDate, groomName, brideName }: DetailsProps) {
   const dateVi = new Date(weddingDate).toLocaleDateString('vi-VN', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
     timeZone: 'Asia/Ho_Chi_Minh',
@@ -142,40 +75,111 @@ export default function DetailsSection({ ceremonyVenue, receptionVenue, weddingD
     <SectionWrapper id="details" className="section-padding bg-blush/10">
       <SectionHeader eyebrow="Ngày trọng đại" title="Thông tin hôn lễ" />
 
+      {/* Ngày */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="flex items-center justify-center gap-3 sm:gap-6 mb-12 sm:mb-16 flex-wrap"
+        className="flex items-center justify-center gap-3 sm:gap-5 mb-12 sm:mb-16 flex-wrap"
       >
-        <div className="h-px w-12 sm:w-20 bg-gradient-to-r from-transparent to-gold/60" />
+        <div className="h-px w-10 sm:w-16 bg-gradient-to-r from-transparent to-gold/60" />
         <div className="flex items-center gap-2 text-charcoal">
-          <Calendar size={14} className="text-gold" />
-          <span className="font-serif text-base sm:text-lg italic text-center">{dateVi}</span>
+          <Calendar size={15} className="text-gold" />
+          <span className="font-serif text-lg sm:text-xl italic">{dateVi}</span>
         </div>
-        <div className="h-px w-12 sm:w-20 bg-gradient-to-l from-transparent to-gold/60" />
+        <div className="h-px w-10 sm:w-16 bg-gradient-to-l from-transparent to-gold/60" />
       </motion.div>
 
-      {/* Cards — stack mobile, 2 col on md+ */}
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12">
-        {ceremonyVenue && <VenueCard venue={ceremonyVenue} label="Lễ vu quy" delay={0.1} />}
-        {receptionVenue && <VenueCard venue={receptionVenue} label="Tiệc cưới" delay={0.25} />}
-        {!ceremonyVenue && !receptionVenue && (
-          <div className="col-span-full text-center py-16 text-charcoal-light font-serif italic text-lg sm:text-xl">
-            Thông tin hôn lễ sẽ được cập nhật sớm...
+      {venue ? (
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-2xl mx-auto"
+        >
+          <div className="relative bg-white border border-blush/30 px-8 sm:px-16 py-12 sm:py-16 text-center hover:shadow-xl transition-shadow duration-500">
+            {/* Top diamond ornament */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3">
+              <div className="w-7 h-7 border-2 border-gold rotate-45" />
+            </div>
+
+            {/* Venue name */}
+            <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl text-charcoal mb-6 leading-tight">
+              {venue.name}
+            </h3>
+
+            {/* Divider */}
+            <div className="flex items-center justify-center gap-3 mb-7">
+              <div className="h-px w-10 bg-blush/60" />
+              <span className="text-gold text-sm">✦</span>
+              <div className="h-px w-10 bg-blush/60" />
+            </div>
+
+            {/* Time & Address */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-10">
+              {venue.time && (
+                <div className="flex items-center gap-2.5 text-charcoal">
+                  <Clock size={16} className="text-gold flex-shrink-0" />
+                  <span className="font-sans text-base sm:text-lg">{venue.time}</span>
+                </div>
+              )}
+              {venue.time && venue.address && (
+                <div className="hidden sm:block w-px h-5 bg-blush/40" />
+              )}
+              {venue.address && (
+                <div className="flex items-start gap-2.5 text-charcoal max-w-xs">
+                  <MapPin size={16} className="text-gold flex-shrink-0 mt-0.5" />
+                  <span className="font-sans text-base sm:text-lg text-left">{venue.address}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col xs:flex-row gap-3 justify-center items-center">
+              {venue.mapEmbed && (
+                <button onClick={() => setShowMap(true)} className="btn-primary text-[11px] sm:text-xs w-full xs:w-auto px-8">
+                  <Map size={13} /> Xem bản đồ
+                </button>
+              )}
+              {venue.mapUrl && (
+                <a
+                  href={venue.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-outline text-[11px] sm:text-xs w-full xs:w-auto px-8"
+                >
+                  <MapPin size={13} /> Mở Google Maps
+                </a>
+              )}
+            </div>
+
+            {/* Corner accents */}
+            <div className="absolute bottom-3 left-3 w-5 h-5 border-b border-l border-blush/40" />
+            <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-blush/40" />
           </div>
-        )}
-      </div>
+        </motion.div>
+      ) : (
+        <p className="text-center font-serif italic text-charcoal-light text-xl sm:text-2xl py-16">
+          Thông tin hôn lễ sẽ được cập nhật sớm...
+        </p>
+      )}
 
       <motion.p
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 1, delay: 0.4 }}
-        className="text-center font-serif italic text-charcoal-light text-base sm:text-lg mt-14 sm:mt-16 px-4"
+        transition={{ duration: 1, delay: 0.3 }}
+        className="text-center font-serif italic text-charcoal-light text-base sm:text-lg mt-12 sm:mt-14 px-4"
       >
         Sự hiện diện của bạn là món quà quý giá nhất với {groomName} &amp; {brideName}
       </motion.p>
+
+      <AnimatePresence>
+        {showMap && venue?.mapEmbed && (
+          <MapModal embedUrl={venue.mapEmbed} name={venue.name} onClose={() => setShowMap(false)} />
+        )}
+      </AnimatePresence>
     </SectionWrapper>
   )
 }

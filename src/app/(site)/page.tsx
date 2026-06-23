@@ -81,8 +81,7 @@ export default async function HomePage() {
         />
         <StorySection items={stories || []} />
         <DetailsSection
-          ceremonyVenue={config?.ceremonyVenue}
-          receptionVenue={config?.receptionVenue}
+          venue={config?.ceremonyVenue}
           weddingDate={weddingDate}
           groomName={config?.groomName || 'Duy'}
           brideName={config?.brideName || 'Chi'}
