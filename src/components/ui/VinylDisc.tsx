@@ -3,14 +3,14 @@
 import { motion } from 'motion/react'
 import { useMusicContext } from '@/contexts/MusicContext'
 
-const W  = 164
-const H  = 128
-const CX = 58
-const CY = 64
-const R  = 50
+const W  = 134
+const H  = 104
+const CX = 47
+const CY = 52
+const R  = 40
 
-const PX = 146
-const PY = 18
+const PX = 118
+const PY = 14
 
 const NX = CX + R * 0.56 * Math.cos((-54 * Math.PI) / 180)
 const NY = CY + R * 0.56 * Math.sin((-54 * Math.PI) / 180)
@@ -211,7 +211,7 @@ export default function VinylDisc() {
       </div>
 
       {/* Track info + soundwave */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 min-w-0">
         {playing ? (
           <div className="flex items-end gap-[2px] h-3.5 flex-shrink-0">
             {[0.1, 0.3, 0, 0.2, 0.15].map((delay, i) => (
@@ -229,7 +229,7 @@ export default function VinylDisc() {
             ))}
           </div>
         )}
-        <p className="font-sans text-[11px] sm:text-xs text-cream/55 tracking-wide max-w-[130px] sm:max-w-[190px] truncate">
+        <p className="font-sans text-[11px] sm:text-xs text-cream/55 tracking-wide truncate min-w-0">
           {currentTitle || '♪'}
         </p>
       </div>
