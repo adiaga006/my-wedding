@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'motion/react'
-import { VolumeX, Volume2, SkipForward } from 'lucide-react'
+import { VolumeX, Volume2 } from 'lucide-react'
 import { useMusicContext } from '@/contexts/MusicContext'
 
 export default function MusicPlayer() {
-  const { playing, hasTrack, toggle, skipNext } = useMusicContext()
+  const { playing, hasTrack, toggle } = useMusicContext()
   const [showControls, setShowControls] = useState(false)
 
   useEffect(() => {
@@ -19,20 +19,9 @@ export default function MusicPlayer() {
   return (
     <>
       <div
-        className="fixed right-4 sm:right-6 z-50 flex items-center gap-2"
+        className="fixed right-4 sm:right-6 z-50"
         style={{ bottom: 'max(1.5rem, calc(1rem + env(safe-area-inset-bottom)))' }}
       >
-        <motion.button
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
-          onClick={skipNext}
-          className="w-10 h-10 bg-charcoal/70 backdrop-blur text-cream/60 rounded-full flex items-center justify-center hover:text-cream hover:bg-charcoal transition-colors border border-white/10"
-          aria-label="Bài tiếp theo"
-        >
-          <SkipForward size={14} />
-        </motion.button>
-
         <motion.button
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}

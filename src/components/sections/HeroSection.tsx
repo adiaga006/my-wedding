@@ -24,7 +24,7 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
   const { datePart, timePart } = formatDateTime(weddingDate)
 
   return (
-    <section id="hero" className="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden">
+    <section id="hero" className="relative min-h-[100svh] flex flex-col items-center overflow-hidden pt-14 sm:pt-16 md:pt-20">
       {/* Background */}
       {imageUrl ? (
         <Image
@@ -49,7 +49,7 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
       <div className="absolute bottom-16 right-5 sm:bottom-8 sm:right-8 w-10 h-10 sm:w-16 sm:h-16 border-b-2 border-r-2 border-cream/30" />
 
       {/* Content — pt đẩy khỏi navbar (h-14 sm:h-16 md:h-20) */}
-      <div className="relative z-10 text-center px-4 xs:px-6 w-full max-w-4xl mx-auto pt-20 sm:pt-24 md:pt-28 pb-24 sm:pb-28">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 xs:px-6 w-full max-w-4xl mx-auto py-10 sm:py-14">
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}

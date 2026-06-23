@@ -51,7 +51,11 @@
   html {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    /* Offset cho fixed navbar khi scroll đến section */
+    scroll-padding-top: 3.5rem;
   }
+  @media (min-width: 640px) { html { scroll-padding-top: 4rem; } }
+  @media (min-width: 768px) { html { scroll-padding-top: 5rem; } }
 
   body {
     background-color: var(--color-cream);
