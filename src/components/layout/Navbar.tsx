@@ -54,7 +54,7 @@ export default function Navbar() {
             href="#hero"
             onClick={(e) => { e.preventDefault(); handleClick('#hero') }}
             style={{ fontFamily: 'var(--font-display)' }}
-            className="text-2xl sm:text-3xl md:text-4xl text-charcoal hover:text-gold transition-colors"
+            className={`text-2xl sm:text-3xl md:text-4xl transition-colors duration-500 ${scrolled ? 'text-charcoal hover:text-gold' : 'text-cream hover:text-gold'}`}
           >
             Duy &amp; Chi
           </a>
@@ -66,7 +66,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => { e.preventDefault(); handleClick(link.href) }}
-                className="font-sans text-[11px] tracking-widest uppercase text-charcoal-light hover:text-gold transition-colors duration-200"
+                className={`font-sans text-[11px] tracking-widest uppercase transition-colors duration-200 ${scrolled ? 'text-charcoal-light hover:text-gold' : 'text-cream/75 hover:text-gold'}`}
               >
                 {link.label}
               </a>
@@ -75,7 +75,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Button — 44px touch target */}
           <button
-            className="md:hidden flex items-center justify-center w-11 h-11 text-charcoal hover:text-gold transition-colors"
+            className={`md:hidden flex items-center justify-center w-11 h-11 transition-colors duration-500 hover:text-gold ${scrolled ? 'text-charcoal' : 'text-cream'}`}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
           >

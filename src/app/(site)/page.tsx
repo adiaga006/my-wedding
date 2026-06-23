@@ -84,7 +84,13 @@ export default async function HomePage() {
           venue={config?.ceremonyVenue}
           weddingDate={weddingDate}
           groomName={config?.groomName || 'Duy'}
+          groomFullName={config?.groomFullName}
+          groomTitle={config?.groomTitle}
           brideName={config?.brideName || 'Chi'}
+          brideFullName={config?.brideFullName}
+          brideTitle={config?.brideTitle}
+          groomFamily={config?.groomFamily}
+          brideFamily={config?.brideFamily}
         />
         <GallerySection images={gallery || []} />
         <WeddingPartySection members={party || []} />

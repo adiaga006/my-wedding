@@ -47,21 +47,22 @@ export default function CountdownTimer({ targetDate }: { targetDate: string }) {
   ]
 
   return (
-    // 2×2 trên mobile nhỏ, 1 hàng từ sm trở lên
-    <div className="grid grid-cols-2 xs:grid-cols-4 gap-4 xs:gap-0 xs:flex xs:items-center">
+    <div className="flex items-center justify-center">
       {units.map((unit, i) => (
         <div key={unit.label} className="flex items-center">
-          <div className="text-center px-2 xs:px-3 sm:px-5">
-            <div className="font-serif text-4xl xs:text-5xl sm:text-6xl md:text-7xl text-cream font-light leading-none tabular-nums">
+          <div className="text-center px-3 xs:px-4 sm:px-5 md:px-6">
+            <div
+              className="font-serif text-cream font-light leading-none tabular-nums"
+              style={{ fontSize: 'clamp(2.25rem, 10vw, 4.5rem)' }}
+            >
               {String(unit.value).padStart(2, '0')}
             </div>
             <div className="font-sans text-[9px] xs:text-[10px] tracking-widest uppercase text-cream/50 mt-2">
               {unit.label}
             </div>
           </div>
-          {/* Separator — chỉ hiện giữa các unit, ẩn trên 2×2 grid */}
           {i < 3 && (
-            <span className="hidden xs:block font-serif text-2xl sm:text-3xl text-cream/30 mb-4 select-none">:</span>
+            <span className="font-serif text-xl xs:text-2xl sm:text-3xl text-cream/30 mb-5 select-none">:</span>
           )}
         </div>
       ))}

@@ -52,6 +52,7 @@
     color: var(--color-charcoal);
     font-family: var(--font-sans);
     overflow-x: hidden;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   h1, h2, h3, h4, h5 {
@@ -78,16 +79,20 @@
 
 /* ── Utilities ── */
 @utility section-padding {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
   padding-left: 1.25rem;
   padding-right: 1.25rem;
 
+  @media (min-width: 480px) {
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+  }
   @media (min-width: 640px) {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
   }
   @media (min-width: 768px) {
     padding-top: 7rem;

@@ -1,8 +1,11 @@
 export const SITE_CONFIG_QUERY = `*[_type == "siteConfig"][0]{
-  coupleName, groomName, brideName, weddingDate, heroImage, heroQuote,
+  coupleName, groomName, groomFullName, groomTitle, brideName, brideFullName, brideTitle,
+  weddingDate, heroImage, heroQuote,
+  groomFamily{ fatherName, motherName, address },
+  brideFamily{ fatherName, motherName, address },
   musicPlaylist[]{ url, title },
   sharePreview{ ogTitle, ogDescription, ogImage },
-  ceremonyVenue{ name, address, time, mapUrl, mapEmbed }
+  ceremonyVenue{ name, hall, address, lunarDate, welcomeTime, startTime, mapUrl, mapEmbed }
 }`
 
 export const STORIES_QUERY = `*[_type == "story"] | order(order asc) {
