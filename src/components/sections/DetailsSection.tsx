@@ -215,6 +215,11 @@ export default function DetailsSection({
             {/* Gold top accent */}
             <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-gold to-transparent" />
 
+            {/* Top diamond */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3">
+              <div className="w-5 h-5 border-2 border-gold rotate-45" />
+            </div>
+
             <div className="px-6 xs:px-10 sm:px-14 md:px-16 pt-10 sm:pt-12 pb-10 sm:pb-12 text-center">
 
               {/* Venue name + hall */}
