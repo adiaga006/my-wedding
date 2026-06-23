@@ -66,7 +66,7 @@ export const siteConfig = defineType({
         defineField({ name: 'address', title: 'Địa chỉ', type: 'string' }),
         defineField({ name: 'time', title: 'Giờ tổ chức', type: 'string' }),
         defineField({ name: 'mapUrl', title: 'Link Google Maps (để mở)', type: 'url', description: 'Link thường để bấm mở Google Maps' }),
-        defineField({ name: 'mapEmbed', title: 'Link nhúng Google Maps', type: 'url', description: 'Lấy từ Google Maps → Chia sẻ → Nhúng bản đồ → Copy phần src="..."' }),
+        defineField({ name: 'mapEmbed', title: 'Nhúng Google Maps', type: 'text', rows: 3, description: 'Paste toàn bộ thẻ <iframe> từ Google Maps → Chia sẻ → Nhúng bản đồ. Hoặc chỉ copy URL trong src="..."' }),
       ],
     }),
   ],

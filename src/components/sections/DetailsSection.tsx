@@ -21,6 +21,11 @@ interface DetailsProps {
   brideName: string
 }
 
+function extractMapSrc(value: string): string {
+  const match = value.match(/src=["']([^"']+)["']/)
+  return match ? match[1] : value
+}
+
 function MapModal({ embedUrl, name, onClose }: { embedUrl: string; name: string; onClose: () => void }) {
   return (
     <motion.div
@@ -137,7 +142,7 @@ export default function DetailsSection({ venue, weddingDate, groomName, brideNam
 
             {/* Buttons */}
             <div className="flex flex-col xs:flex-row gap-3 justify-center items-center">
-              {venue.mapEmbed && (
+              {venue.mapEmbed && extractMapSrc(venue.mapEmbed) && (
                 <button onClick={() => setShowMap(true)} className="btn-primary text-[11px] sm:text-xs w-full xs:w-auto px-8">
                   <Map size={13} /> Xem bản đồ
                 </button>
@@ -177,7 +182,7 @@ export default function DetailsSection({ venue, weddingDate, groomName, brideNam
 
       <AnimatePresence>
         {showMap && venue?.mapEmbed && (
-          <MapModal embedUrl={venue.mapEmbed} name={venue.name} onClose={() => setShowMap(false)} />
+          <MapModal embedUrl={extractMapSrc(venue.mapEmbed)} name={venue.name} onClose={() => setShowMap(false)} />
         )}
       </AnimatePresence>
     </SectionWrapper>
