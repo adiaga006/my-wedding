@@ -35,10 +35,12 @@ function FloralDivider() {
   )
 }
 
+const EASE = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number]
+
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 22 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.8, delay, ease: [0.25, 0.46, 0.45, 0.94] as number[] },
+  transition: { duration: 0.8, delay, ease: EASE },
 })
 
 export default function InviteIntro({
