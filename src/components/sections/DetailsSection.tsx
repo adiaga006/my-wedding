@@ -127,7 +127,7 @@ export default function DetailsSection({
           >
             <div className="border border-blush/30 bg-white rounded-sm px-5 xs:px-8 sm:px-10 py-8 sm:py-10">
               {/* Two families */}
-              <div className="grid grid-cols-2 gap-4 sm:gap-8 mb-6 sm:mb-8">
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-5 xs:gap-4 sm:gap-8 mb-6 sm:mb-8">
                 <FamilyBlock label="Nhà Trai" family={groomFamily} fullName={groomFullName} title={groomTitle} />
                 <FamilyBlock label="Nhà Gái" family={brideFamily} fullName={brideFullName} title={brideTitle} />
               </div>
@@ -197,7 +197,7 @@ export default function DetailsSection({
             {dateNum}
           </p>
           {venue?.lunarDate && (
-            <p className="font-sans text-[11px] sm:text-xs text-charcoal-light italic tracking-wide px-4">
+            <p className="font-sans text-xs sm:text-sm text-charcoal-light italic tracking-wide px-4">
               ({venue.lunarDate})
             </p>
           )}
@@ -253,7 +253,7 @@ export default function DetailsSection({
                   <div className={`mb-8 grid divide-x divide-blush/20 ${times.length === 1 ? 'grid-cols-1' : times.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
                     {times.map((t) => (
                       <div key={t.label} className="flex flex-col items-center gap-1.5 px-2 sm:px-4">
-                        <p className="font-sans text-[9px] sm:text-[10px] tracking-widest uppercase text-charcoal-light">{t.label}</p>
+                        <p className="font-sans text-[10px] xs:text-xs tracking-widest uppercase text-charcoal-light">{t.label}</p>
                         <div className="flex items-center gap-1">
                           <Clock size={12} className="text-gold flex-shrink-0" />
                           <p className="font-serif text-lg sm:text-xl md:text-2xl text-charcoal">{t.value}</p>
@@ -278,14 +278,14 @@ export default function DetailsSection({
               )}
 
               {/* Buttons */}
-              <div className="flex flex-col xs:flex-row gap-3 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 {venue.mapEmbed && extractMapSrc(venue.mapEmbed) && (
-                  <button onClick={() => setShowMap(true)} className="btn-primary text-[11px] sm:text-xs w-full xs:w-auto px-8">
+                  <button onClick={() => setShowMap(true)} className="btn-primary w-full sm:w-auto px-8">
                     <Map size={13} /> Xem to hơn
                   </button>
                 )}
                 {venue.mapUrl && (
-                  <a href={venue.mapUrl} target="_blank" rel="noopener noreferrer" className="btn-outline text-[11px] sm:text-xs w-full xs:w-auto px-8">
+                  <a href={venue.mapUrl} target="_blank" rel="noopener noreferrer" className="btn-outline w-full sm:w-auto px-8">
                     <MapPin size={13} /> Mở Google Maps
                   </a>
                 )}

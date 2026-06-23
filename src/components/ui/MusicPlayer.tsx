@@ -125,7 +125,7 @@ export default function MusicPlayer({ playlist }: MusicPlayerProps) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
             onClick={skipNext}
-            className="w-8 h-8 bg-charcoal/70 backdrop-blur text-cream/60 rounded-full flex items-center justify-center hover:text-cream hover:bg-charcoal transition-colors border border-white/10"
+            className="w-10 h-10 bg-charcoal/70 backdrop-blur text-cream/60 rounded-full flex items-center justify-center hover:text-cream hover:bg-charcoal transition-colors border border-white/10"
             aria-label="Bài tiếp theo"
             title="Bài tiếp theo"
           >

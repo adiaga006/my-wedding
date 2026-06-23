@@ -25,7 +25,7 @@ function MemberCard({ member, index }: { member: PartyMember; index: number }) {
       className="text-center group"
     >
       {/* Photo — touch to scale on mobile via active state */}
-      <div className="relative w-24 h-24 xs:w-28 xs:h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 mx-auto mb-3 sm:mb-4 overflow-hidden rounded-full border-[3px] border-blush/30 group-hover:border-gold/50 transition-colors duration-300">
+      <div className="relative w-24 h-24 xs:w-28 xs:h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 mx-auto mb-3 sm:mb-4 overflow-hidden rounded-full border-[2px] xs:border-[3px] border-blush/30 group-hover:border-gold/50 transition-colors duration-300">
         {member.photo ? (
           <Image
             src={urlFor(member.photo).width(288).height(288).url()}
@@ -41,7 +41,7 @@ function MemberCard({ member, index }: { member: PartyMember; index: number }) {
         )}
       </div>
       <p className="font-serif text-lg sm:text-xl text-charcoal mb-0.5 leading-snug">{member.name}</p>
-      <p className="font-sans text-[10px] sm:text-xs tracking-wider uppercase text-gold mb-1">{member.role}</p>
+      <p className="font-sans text-xs tracking-wider uppercase text-gold mb-1">{member.role}</p>
       {member.relationship && (
         <p className="font-sans text-xs text-charcoal-light italic px-2">{member.relationship}</p>
       )}

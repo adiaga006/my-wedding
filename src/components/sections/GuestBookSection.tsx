@@ -117,10 +117,10 @@ function MessageCarousel({ messages }: { messages: GuestMessage[] }) {
         <div className="flex items-center justify-center gap-4 mt-10">
           <button
             onClick={prev}
-            className="w-9 h-9 border border-charcoal/15 flex items-center justify-center text-charcoal-light hover:border-gold hover:text-gold transition-all duration-200"
+            className="w-11 h-11 border border-charcoal/15 flex items-center justify-center text-charcoal-light hover:border-gold hover:text-gold transition-all duration-200"
             aria-label="Trang trước"
           >
-            <ChevronLeft size={15} />
+            <ChevronLeft size={16} />
           </button>
 
           <div className="flex items-center gap-1.5">
@@ -138,10 +138,10 @@ function MessageCarousel({ messages }: { messages: GuestMessage[] }) {
 
           <button
             onClick={next}
-            className="w-9 h-9 border border-charcoal/15 flex items-center justify-center text-charcoal-light hover:border-gold hover:text-gold transition-all duration-200"
+            className="w-11 h-11 border border-charcoal/15 flex items-center justify-center text-charcoal-light hover:border-gold hover:text-gold transition-all duration-200"
             aria-label="Trang tiếp"
           >
-            <ChevronRight size={15} />
+            <ChevronRight size={16} />
           </button>
         </div>
       )}

@@ -37,7 +37,7 @@ export default function GallerySection({ images }: { images: GalleryImage[] }) {
           className="max-w-6xl mx-auto"
           style={{ columnCount: undefined }} // handled by className below
         >
-          <div className="[column-count:1] xs:[column-count:2] lg:[column-count:3] [column-gap:12px] sm:[column-gap:16px]">
+          <div className="[column-count:1] xs:[column-count:2] lg:[column-count:3] [column-gap:8px] xs:[column-gap:12px] sm:[column-gap:16px]">
             {images.map((img, i) => (
               <motion.div
                 key={img._id}

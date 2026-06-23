@@ -53,7 +53,7 @@ export default function CountdownTimer({ targetDate }: { targetDate: string }) {
           <div className="text-center px-3 xs:px-4 sm:px-5 md:px-6">
             <div
               className="font-serif text-cream font-light leading-none tabular-nums"
-              style={{ fontSize: 'clamp(2.25rem, 10vw, 4.5rem)' }}
+              style={{ fontSize: 'clamp(1.75rem, 6vw, 3.5rem)' }}
             >
               {String(unit.value).padStart(2, '0')}
             </div>

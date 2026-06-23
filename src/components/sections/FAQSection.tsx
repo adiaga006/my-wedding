@@ -16,7 +16,7 @@ function AccordionItem({ item, isOpen, onToggle }: { item: FAQItem; isOpen: bool
         onClick={onToggle}
         className="w-full flex items-center justify-between py-5 sm:py-6 text-left gap-4 group min-h-[56px]"
       >
-        <span className="font-serif text-base sm:text-lg md:text-xl text-charcoal group-hover:text-gold transition-colors leading-snug">
+        <span className="font-serif text-base sm:text-lg md:text-xl text-charcoal group-hover:text-gold transition-colors leading-snug break-words min-w-0">
           {item.question}
         </span>
         <span className="flex-shrink-0 text-gold w-5 h-5 flex items-center justify-center">

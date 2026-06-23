@@ -66,7 +66,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => { e.preventDefault(); handleClick(link.href) }}
-                className={`font-sans text-[11px] tracking-widest uppercase transition-colors duration-200 ${scrolled ? 'text-charcoal-light hover:text-gold' : 'text-cream/75 hover:text-gold'}`}
+                className={`font-sans text-xs tracking-widest uppercase transition-colors duration-200 ${scrolled ? 'text-charcoal-light hover:text-gold' : 'text-cream/75 hover:text-gold'}`}
               >
                 {link.label}
               </a>
@@ -92,7 +92,7 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'tween', duration: 0.28 }}
-            className="fixed inset-0 z-40 bg-cream flex flex-col items-center justify-center gap-8 sm:gap-10 px-8"
+            className="fixed inset-0 z-40 bg-cream flex flex-col items-center justify-center gap-5 sm:gap-8 px-8 overflow-y-auto"
           >
             <p style={{ fontFamily: 'var(--font-display)' }} className="text-5xl text-gold mb-4">Duy &amp; Chi</p>
             {NAV_LINKS.map((link) => (
@@ -100,7 +100,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => { e.preventDefault(); handleClick(link.href) }}
-                className="font-sans text-sm tracking-[0.3em] uppercase text-charcoal hover:text-gold transition-colors py-2 w-full text-center border-b border-blush/20"
+                className="font-sans text-sm tracking-[0.3em] uppercase text-charcoal hover:text-gold transition-colors py-3 min-h-[44px] flex items-center justify-center w-full border-b border-blush/20"
               >
                 {link.label}
               </a>

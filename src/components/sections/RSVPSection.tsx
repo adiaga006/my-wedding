@@ -163,7 +163,7 @@ export default function RSVPSection() {
                   <label className="font-sans text-xs tracking-widest uppercase text-charcoal-light block mb-3">
                     Số người tham dự
                   </label>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-2 xs:gap-3">
                     {[1, 2, 3, 4].map((n) => (
                       <label key={n} className="relative cursor-pointer">
                         <input type="radio" name="guestCount" value={n} defaultChecked={n === 1} className="sr-only peer" />
