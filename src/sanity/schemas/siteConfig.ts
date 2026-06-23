@@ -43,13 +43,25 @@ export const siteConfig = defineType({
         {
           type: 'object',
           fields: [
-            defineField({ name: 'url', title: 'Link YouTube', type: 'url', description: 'VD: https://www.youtube.com/watch?v=abc123' }),
-            defineField({ name: 'title', title: 'Tên bài (tuỳ chọn)', type: 'string' }),
+            defineField({ name: 'title', title: 'Tên bài', type: 'string' }),
+            defineField({
+              name: 'audioFile',
+              title: 'File nhạc (MP3/WAV — ưu tiên)',
+              type: 'file',
+              options: { accept: 'audio/*,video/mp4' },
+              description: 'Upload file nhạc trực tiếp — phát nhanh hơn YouTube. Khuyến nghị: MP3',
+            }),
+            defineField({
+              name: 'url',
+              title: 'Link YouTube (dự phòng)',
+              type: 'url',
+              description: 'Dùng nếu không upload file. VD: https://www.youtube.com/watch?v=abc123',
+            }),
           ],
           preview: { select: { title: 'title', subtitle: 'url' } },
         },
       ],
-      description: 'Thêm nhiều bài — website sẽ phát ngẫu nhiên hoặc lần lượt',
+      description: 'Ưu tiên upload file nhạc. YouTube dùng làm dự phòng.',
     }),
     defineField({
       name: 'sharePreview',

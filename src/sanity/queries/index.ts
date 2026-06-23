@@ -3,7 +3,7 @@ export const SITE_CONFIG_QUERY = `*[_type == "siteConfig"][0]{
   weddingDate, heroImage, heroQuote,
   groomFamily{ fatherName, motherName, address },
   brideFamily{ fatherName, motherName, address },
-  musicPlaylist[]{ url, title },
+  musicPlaylist[]{ title, url, audioFile{ asset->{ url } } },
   sharePreview{ ogTitle, ogDescription, ogImage },
   ceremonyVenue{ name, hall, address, lunarDate, welcomeTime, startTime, mapUrl, mapEmbed }
 }`
@@ -29,5 +29,5 @@ export const FAQ_QUERY = `*[_type == "faq"] | order(order asc) {
 }`
 
 export const BANK_INFO_QUERY = `*[_type == "bankInfo"] | order(order asc) {
-  _id, owner, bankName, accountNumber, accountName, qrCode
+  _id, label, owner, bankName, accountNumber, accountName, qrCode
 }`

@@ -1,140 +1,38 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'motion/react'
 import { VolumeX, Volume2, SkipForward } from 'lucide-react'
+import { useMusicContext } from '@/contexts/MusicContext'
 
-function extractYouTubeId(url: string): string | null {
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?/\s]{11})/,
-    /youtube\.com\/shorts\/([^&?/\s]{11})/,
-  ]
-  for (const p of patterns) {
-    const m = url.match(p)
-    if (m) return m[1]
-  }
-  return null
-}
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
-
-const YT_STATE = { ENDED: 0, PLAYING: 1, PAUSED: 2, BUFFERING: 3 }
-
-interface Track { url: string; title?: string }
-
-interface MusicPlayerProps {
-  playlist?: Track[]
-}
-
-export default function MusicPlayer({ playlist }: MusicPlayerProps) {
-  const [playing, setPlaying] = useState(true)
+export default function MusicPlayer() {
+  const { playing, hasTrack, toggle, skipNext } = useMusicContext()
   const [showControls, setShowControls] = useState(false)
-  const [trackIndex, setTrackIndex] = useState(0)
-  const [shuffled, setShuffled] = useState<string[]>([])
-  const iframeRef = useRef<HTMLIFrameElement>(null)
 
-  // Xây danh sách ID đã shuffle 1 lần lúc mount
-  useEffect(() => {
-    if (!playlist?.length) return
-    const ids = playlist.map((t) => extractYouTubeId(t.url)).filter(Boolean) as string[]
-    setShuffled(shuffle(ids))
-  }, [playlist])
-
-  // Hiện controls sau 800ms — iframe đã mount và load xong rồi
   useEffect(() => {
     const t = setTimeout(() => setShowControls(true), 800)
     return () => clearTimeout(t)
   }, [])
 
-  // Lắng nghe state YouTube để phát bài tiếp khi hết
-  useEffect(() => {
-    const handler = (e: MessageEvent) => {
-      try {
-        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data
-        const state = data?.info?.playerState
-        if (state === undefined) return
-        if (state === YT_STATE.PLAYING || state === YT_STATE.BUFFERING) {
-          setPlaying(true)
-        } else if (state === YT_STATE.PAUSED) {
-          setPlaying(false)
-        } else if (state === YT_STATE.ENDED) {
-          // Chuyển bài tiếp, hoặc quay lại đầu
-          setTrackIndex((i) => (i + 1) % (shuffled.length || 1))
-        }
-      } catch { /* ignore */ }
-    }
-    window.addEventListener('message', handler)
-    return () => window.removeEventListener('message', handler)
-  }, [shuffled])
-
-  const sendCommand = useCallback((func: string) => {
-    iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: 'command', func, args: [] }),
-      '*'
-    )
-  }, [])
-
-  const toggle = () => {
-    if (playing) {
-      sendCommand('pauseVideo')
-      setPlaying(false)
-    } else {
-      sendCommand('playVideo')
-      setPlaying(true)
-    }
-  }
-
-  const skipNext = () => {
-    setPlaying(true)
-    setTrackIndex((i) => (i + 1) % (shuffled.length || 1))
-  }
-
-  const currentId = shuffled[trackIndex]
-  // playlist param: tất cả ID còn lại để YouTube tự loop
-  const playlistParam = shuffled.length > 1
-    ? shuffled.filter((_, i) => i !== trackIndex).join(',')
-    : currentId
-
-  if (!currentId) return null
+  if (!hasTrack || !showControls) return null
 
   return (
     <>
-      {/* Hidden YouTube iframe — mount ngay, không chờ */}
-      <iframe
-        key={currentId}
-        ref={iframeRef}
-        src={`https://www.youtube.com/embed/${currentId}?enablejsapi=1&autoplay=1&loop=${shuffled.length === 1 ? 1 : 0}&playlist=${playlistParam}&controls=0&mute=0&origin=${typeof window !== 'undefined' ? window.location.origin : ''}`}
-        allow="autoplay; encrypted-media"
-        className="absolute w-0 h-0 pointer-events-none opacity-0"
-        aria-hidden="true"
-        title="background music"
-      />
+      <div
+        className="fixed right-4 sm:right-6 z-50 flex items-center gap-2"
+        style={{ bottom: 'max(1.5rem, calc(1rem + env(safe-area-inset-bottom)))' }}
+      >
+        <motion.button
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
+          onClick={skipNext}
+          className="w-10 h-10 bg-charcoal/70 backdrop-blur text-cream/60 rounded-full flex items-center justify-center hover:text-cream hover:bg-charcoal transition-colors border border-white/10"
+          aria-label="Bài tiếp theo"
+        >
+          <SkipForward size={14} />
+        </motion.button>
 
-      {/* Controls — chỉ hiện sau khi iframe đã load */}
-      {showControls && <div className="fixed right-4 sm:right-6 z-50 flex items-center gap-2" style={{ bottom: 'max(1.5rem, calc(1rem + env(safe-area-inset-bottom)))' }}>
-        {/* Skip next — chỉ hiện khi có nhiều bài */}
-        {shuffled.length > 1 && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
-            onClick={skipNext}
-            className="w-10 h-10 bg-charcoal/70 backdrop-blur text-cream/60 rounded-full flex items-center justify-center hover:text-cream hover:bg-charcoal transition-colors border border-white/10"
-            aria-label="Bài tiếp theo"
-            title="Bài tiếp theo"
-          >
-            <SkipForward size={14} />
-          </motion.button>
-        )}
-
-        {/* Play/Pause */}
         <motion.button
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -142,7 +40,6 @@ export default function MusicPlayer({ playlist }: MusicPlayerProps) {
           onClick={toggle}
           className="w-12 h-12 bg-charcoal/90 backdrop-blur text-cream rounded-full flex items-center justify-center shadow-lg hover:bg-charcoal transition-colors border border-white/10"
           aria-label={playing ? 'Tắt nhạc' : 'Bật nhạc'}
-          title={playing ? 'Tắt nhạc nền' : 'Bật nhạc nền'}
         >
           {playing ? (
             <div className="flex items-end gap-0.5 h-4">
@@ -159,9 +56,9 @@ export default function MusicPlayer({ playlist }: MusicPlayerProps) {
             <VolumeX size={18} className="text-cream/60" />
           )}
         </motion.button>
-      </div>}
+      </div>
 
-      <AutoplayHint playing={playing} onPlay={() => { sendCommand('playVideo'); setPlaying(true) }} />
+      <AutoplayHint playing={playing} onPlay={toggle} />
     </>
   )
 }

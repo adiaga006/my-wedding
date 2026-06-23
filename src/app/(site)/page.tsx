@@ -22,6 +22,8 @@ import GuestBookSection from '@/components/sections/GuestBookSection'
 import GiftSection from '@/components/sections/GiftSection'
 import FAQSection from '@/components/sections/FAQSection'
 import MusicPlayer from '@/components/ui/MusicPlayer'
+import InviteIntro from '@/components/ui/InviteIntro'
+import { MusicProvider } from '@/contexts/MusicContext'
 
 export const revalidate = 60
 
@@ -69,7 +71,7 @@ export default async function HomePage() {
   const weddingDate = config?.weddingDate || process.env.NEXT_PUBLIC_WEDDING_DATE || new Date(Date.now() + 86400000 * 30).toISOString()
 
   return (
-    <>
+    <MusicProvider playlist={config?.musicPlaylist}>
       <Navbar />
       <main>
         <HeroSection
@@ -100,7 +102,12 @@ export default async function HomePage() {
         <FAQSection items={faqs || []} />
       </main>
       <Footer />
-      <MusicPlayer playlist={config?.musicPlaylist} />
-    </>
+      <MusicPlayer />
+      <InviteIntro
+        groomName={config?.groomName || 'Duy'}
+        brideName={config?.brideName || 'Chi'}
+        weddingDate={weddingDate}
+      />
+    </MusicProvider>
   )
 }

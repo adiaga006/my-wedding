@@ -4,6 +4,7 @@ import { motion } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import CountdownTimer from '@/components/ui/CountdownTimer'
+import VinylDisc from '@/components/ui/VinylDisc'
 import { urlFor } from '@/sanity/lib/image'
 import { formatDate, formatDateTime } from '@/lib/utils'
 
@@ -48,7 +49,7 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
       <div className="absolute bottom-16 right-5 sm:bottom-8 sm:right-8 w-10 h-10 sm:w-16 sm:h-16 border-b-2 border-r-2 border-cream/30" />
 
       {/* Content — pt đẩy khỏi navbar (h-14 sm:h-16 md:h-20) */}
-      <div className="relative z-10 text-center px-4 xs:px-6 w-full max-w-4xl mx-auto pt-20 sm:pt-24 md:pt-28">
+      <div className="relative z-10 text-center px-4 xs:px-6 w-full max-w-4xl mx-auto pt-20 sm:pt-24 md:pt-28 pb-24 sm:pb-28">
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -133,6 +134,11 @@ export default function HeroSection({ groomName, brideName, weddingDate, heroIma
         >
           <CountdownTimer targetDate={weddingDate} />
         </motion.div>
+
+        {/* Đĩa vinyl + tên bài đang phát */}
+        <div className="mt-8">
+          <VinylDisc />
+        </div>
       </div>
 
       {/* Scroll down */}
