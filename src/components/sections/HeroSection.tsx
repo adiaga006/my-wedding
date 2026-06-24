@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Fragment } from 'react'
 import { motion, useScroll, useTransform } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import Image from 'next/image'
@@ -295,9 +295,17 @@ export default function HeroSection({
   const imageUrl = heroImage ? urlFor(heroImage).width(1400).url() : null
   const { datePart, timePart } = formatDateTime(weddingDate)
 
+
   const sectionRef = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] })
   const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '25%'])
+
+  const [animKey, setAnimKey] = useState(0)
+  useEffect(() => {
+    const handler = () => setAnimKey((k: number) => k + 1)
+    window.addEventListener('intro-closed', handler)
+    return () => window.removeEventListener('intro-closed', handler)
+  }, [])
 
   const groomRevealEnd = 0.6 + groomName.length * 0.09 + 0.3
   const brideRevealDelay = groomRevealEnd
@@ -324,16 +332,29 @@ export default function HeroSection({
 
       <div className="absolute inset-0 bg-charcoal" />
 
-      {/* Ảnh — Ken Burns + Parallax */}
+      {/* Mobile: Ken Burns + Parallax + cover */}
       {imageUrl && (
-        <motion.div className="absolute inset-0"
-          initial={{ scale: 1.12 }} animate={{ scale: 1.0 }}
+        <motion.div className="absolute inset-0 md:hidden"
+          initial={{ scale: 1.05 }} animate={{ scale: 1.0 }}
           transition={{ duration: 7, ease: [0.25, 0.46, 0.45, 0.94] }}
           style={{ y: bgY }}
         >
           <Image src={imageUrl} alt={`${groomName} & ${brideName}`}
             fill priority className="object-cover object-center" sizes="100vw" />
         </motion.div>
+      )}
+      {/* Desktop: blurred backdrop lấp đầy + ảnh sắc nét contain ở trên */}
+      {imageUrl && (
+        <div className="absolute inset-0 hidden md:block">
+          {/* Backdrop mờ — lấp đầy vùng trống hai bên */}
+          <Image src={imageUrl} alt="" fill aria-hidden
+            className="object-cover object-center scale-110"
+            style={{ filter: 'blur(24px) brightness(0.45)' }}
+            sizes="100vw" />
+          {/* Ảnh chính — hiện đầy đủ, không cắt */}
+          <Image src={imageUrl} alt={`${groomName} & ${brideName}`}
+            fill priority className="object-contain object-center" sizes="100vw" />
+        </div>
       )}
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/85 z-[1]" />
@@ -387,57 +408,59 @@ export default function HeroSection({
           <div className="flex-1 h-px bg-gold/40" />
         </motion.div>
 
-        {/* Tên đôi — 囍 căn tuyệt đối giữa */}
-        <div className="relative flex flex-row w-full mb-4 sm:mb-5">
-          {/* Chú rể */}
-          <div className="flex flex-col items-center flex-1 text-center pr-8 xs:pr-10 sm:pr-12">
-            {groomTitle && (
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="font-sans text-[9px] xs:text-[10px] tracking-[0.3em] uppercase text-gold/80 mb-1.5 leading-none"
-              >{groomTitle}</motion.p>
-            )}
-            <RevealName text={groomName} delay={0.6}
-              style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(1.3rem, 7vw, 4rem)', letterSpacing: '0.06em' }} />
+        {/* Tên đôi — 囍 là flex item giữa, luôn cách đều 2 tên */}
+        <Fragment key={animKey}>
+          <div className="flex flex-row items-center w-full mb-4 sm:mb-5">
+            {/* Chú rể */}
+            <div className="flex flex-col items-center flex-1 text-center">
+              {groomTitle && (
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  className="font-sans text-[9px] xs:text-[10px] tracking-[0.3em] uppercase text-gold/80 mb-1.5 leading-none"
+                >{groomTitle}</motion.p>
+              )}
+              <RevealName text={groomName} delay={0.6}
+                style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(1.3rem, 7vw, 4rem)', letterSpacing: '0.06em' }} />
+            </div>
+
+            {/* 囍 — flex item ở giữa */}
+            <motion.span
+              initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: brideRevealDelay - 0.15, ease: [0.34, 1.56, 0.64, 1] }}
+              style={{ fontSize: 'clamp(1.1rem, 5vw, 2.5rem)' }}
+              className="flex-shrink-0 px-3 xs:px-4 text-gold leading-none select-none pointer-events-none"
+            >囍</motion.span>
+
+            {/* Cô dâu */}
+            <div className="flex flex-col items-center flex-1 text-center">
+              {brideTitle && (
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: brideRevealDelay }}
+                  className="font-sans text-[9px] xs:text-[10px] tracking-[0.3em] uppercase text-gold/80 mb-1.5 leading-none"
+                >{brideTitle}</motion.p>
+              )}
+              <RevealName text={brideName} delay={brideRevealDelay}
+                style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(1.3rem, 7vw, 4rem)', letterSpacing: '0.06em' }} />
+            </div>
           </div>
 
-          {/* 囍 — tuyệt đối giữa */}
-          <motion.span
-            initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: brideRevealDelay - 0.15, ease: [0.34, 1.56, 0.64, 1] }}
-            style={{ fontSize: 'clamp(1.3rem, 6vw, 3rem)' }}
-            className="absolute inset-0 flex items-center justify-center text-gold leading-none select-none pointer-events-none"
-          >囍</motion.span>
+          <motion.div initial={{ opacity: 0, scaleX: 0 }} animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ duration: 0.9, delay: brideRevealDelay + brideName.length * 0.09 + 0.2 }}
+            className="flex items-center gap-2 mb-5 sm:mb-7 w-full max-w-[280px] xs:max-w-xs"
+          >
+            <div className="flex-1 h-px bg-gold/40" />
+            <span className="text-gold/70 text-xs tracking-widest">✦ ❧ ✦</span>
+            <div className="flex-1 h-px bg-gold/40" />
+          </motion.div>
 
-          {/* Cô dâu */}
-          <div className="flex flex-col items-center flex-1 text-center pl-8 xs:pl-10 sm:pl-12">
-            {brideTitle && (
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: brideRevealDelay }}
-                className="font-sans text-[9px] xs:text-[10px] tracking-[0.3em] uppercase text-gold/80 mb-1.5 leading-none"
-              >{brideTitle}</motion.p>
-            )}
-            <RevealName text={brideName} delay={brideRevealDelay}
-              style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(1.3rem, 7vw, 4rem)', letterSpacing: '0.06em', animationDelay: '2.5s' }} />
-          </div>
-        </div>
-
-        <motion.div initial={{ opacity: 0, scaleX: 0 }} animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ duration: 0.9, delay: brideRevealDelay + brideName.length * 0.09 + 0.2 }}
-          className="flex items-center gap-2 mb-5 sm:mb-7 w-full max-w-[280px] xs:max-w-xs"
-        >
-          <div className="flex-1 h-px bg-gold/40" />
-          <span className="text-gold/70 text-xs tracking-widest">✦ ❧ ✦</span>
-          <div className="flex-1 h-px bg-gold/40" />
-        </motion.div>
-
-        {/* Quote — typewriter */}
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: quoteDelay - 0.2 }}
-          className="font-sans text-[10px] sm:text-xs tracking-[0.3em] uppercase text-cream/60"
-        >
-          <TypewriterText text={heroQuote || 'Love never fails'} startDelay={quoteDelay} />
-        </motion.p>
+          {/* Quote — typewriter */}
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: quoteDelay - 0.2 }}
+            className="font-sans text-[10px] sm:text-xs tracking-[0.3em] uppercase text-cream/60"
+          >
+            <TypewriterText text={heroQuote || 'Love never fails'} startDelay={quoteDelay} />
+          </motion.p>
+        </Fragment>
       </div>
 
       <div className="flex-1" />
@@ -454,17 +477,17 @@ export default function HeroSection({
         <div className="scale-[0.78] origin-center"><VinylDisc /></div>
       </div>
 
-      <motion.button
-        onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 2.5 }}
-        className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 text-cream/50 hover:text-cream transition-colors p-2 z-10"
-        aria-label="Cuộn xuống"
-      >
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
-          <ChevronDown size={28} className="sm:w-8 sm:h-8" />
-        </motion.div>
-      </motion.button>
+          <motion.button
+            onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 2.5 }}
+            className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 text-cream/50 hover:text-cream transition-colors p-2 z-10"
+            aria-label="Cuộn xuống"
+          >
+            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
+              <ChevronDown size={28} className="sm:w-8 sm:h-8" />
+            </motion.div>
+          </motion.button>
     </section>
   )
 }

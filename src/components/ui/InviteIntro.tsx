@@ -63,6 +63,7 @@ export default function InviteIntro({
 
   const handleOpen = () => {
     if (!playing) toggle()
+    window.dispatchEvent(new Event('intro-closed'))
     setOpening(true)
     setTimeout(() => setGone(true), 1000)
   }

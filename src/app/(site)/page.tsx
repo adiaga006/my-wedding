@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { client } from '@/sanity/lib/client'
 import {
   SITE_CONFIG_QUERY,
-  STORIES_QUERY,
   GALLERY_QUERY,
   GUESTBOOK_QUERY,
   BANK_INFO_QUERY,
@@ -11,7 +10,6 @@ import { urlFor } from '@/sanity/lib/image'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import HeroSection from '@/components/sections/HeroSection'
-import StorySection from '@/components/sections/StorySection'
 import DetailsSection from '@/components/sections/DetailsSection'
 import GallerySection from '@/components/sections/GallerySection'
 import RSVPSection from '@/components/sections/RSVPSection'
@@ -54,9 +52,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [config, stories, gallery, guestbook, bankAccounts] = await Promise.all([
+  const [config, gallery, guestbook, bankAccounts] = await Promise.all([
     client.fetch(SITE_CONFIG_QUERY),
-    client.fetch(STORIES_QUERY),
     client.fetch(GALLERY_QUERY),
     client.fetch(GUESTBOOK_QUERY),
     client.fetch(BANK_INFO_QUERY),
@@ -77,7 +74,6 @@ export default async function HomePage() {
           heroImage={config?.heroImage}
           heroQuote={config?.heroQuote}
         />
-        <StorySection items={stories || []} />
         <DetailsSection
           venue={config?.ceremonyVenue}
           weddingDate={weddingDate}

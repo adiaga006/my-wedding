@@ -5,9 +5,8 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Menu, X } from 'lucide-react'
 
 const NAV_LINKS = [
-  { label: 'Câu chuyện', href: '#story' },
   { label: 'Hôn lễ', href: '#details' },
-  { label: 'Hình ảnh', href: '#gallery' },
+  { label: 'Album cưới', href: '#gallery' },
   { label: 'Xác nhận', href: '#rsvp' },
   { label: 'Lời chúc', href: '#guestbook' },
   { label: 'Mừng cưới', href: '#gift' },
@@ -75,7 +74,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Button — 44px touch target */}
           <button
-            className={`md:hidden flex items-center justify-center w-11 h-11 transition-colors duration-500 hover:text-gold ${scrolled ? 'text-charcoal' : 'text-cream'}`}
+            className={`md:hidden flex items-center justify-center w-11 h-11 transition-colors duration-500 hover:text-gold ${mobileOpen ? 'text-gold' : scrolled ? 'text-charcoal' : 'text-cream'}`}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
           >
