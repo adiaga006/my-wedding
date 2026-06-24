@@ -2,7 +2,7 @@ import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import {
-  siteConfig, story, galleryImage,
+  siteConfig, galleryImage,
   rsvp, guestbook, bankInfo,
 } from './src/sanity/schemas'
 
@@ -22,7 +22,6 @@ export default defineConfig({
               S.document().schemaType('siteConfig').documentId('siteConfig')
             ),
             S.divider(),
-            S.documentTypeListItem('story').title('Câu chuyện tình yêu'),
             S.documentTypeListItem('galleryImage').title('Hình ảnh Gallery'),
             S.documentTypeListItem('bankInfo').title('Thông tin ngân hàng'),
             S.divider(),
@@ -33,6 +32,6 @@ export default defineConfig({
     visionTool(),
   ],
   schema: {
-    types: [siteConfig, story, galleryImage, rsvp, guestbook, bankInfo],
+    types: [siteConfig, galleryImage, rsvp, guestbook, bankInfo],
   },
 })

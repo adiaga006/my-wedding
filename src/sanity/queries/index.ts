@@ -8,9 +8,6 @@ export const SITE_CONFIG_QUERY = `*[_type == "siteConfig"][0]{
   ceremonyVenue{ name, hall, address, lunarDate, welcomeTime, startTime, mapUrl, mapEmbed }
 }`
 
-export const STORIES_QUERY = `*[_type == "story"] | order(order asc) {
-  _id, title, date, description, image
-}`
 
 export const GALLERY_QUERY = `*[_type == "galleryImage"] | order(order asc) {
   _id, image, caption
