@@ -1,5 +1,6 @@
 'use client'
 
+import { useId } from 'react'
 import { motion } from 'motion/react'
 import { useMusicContext } from '@/contexts/MusicContext'
 
@@ -32,6 +33,7 @@ const sx2 = R + LABEL_R * Math.cos(sA2), sy2 = R + LABEL_R * Math.sin(sA2)
 const SECTOR_PATH = `M ${R} ${R} L ${sx1.toFixed(2)} ${sy1.toFixed(2)} A ${LABEL_R} ${LABEL_R} 0 0 1 ${sx2.toFixed(2)} ${sy2.toFixed(2)} Z`
 
 export default function VinylDisc() {
+  const uid = useId().replace(/:/g, '')
   const { playing, currentTitle, hasTrack } = useMusicContext()
   if (!hasTrack) return null
 
@@ -85,17 +87,17 @@ export default function VinylDisc() {
         >
           <svg width={R * 2} height={R * 2} viewBox={`0 0 ${R * 2} ${R * 2}`} fill="none">
             <defs>
-              <radialGradient id="vd-body" cx="38%" cy="32%" r="66%">
+              <radialGradient id={`${uid}-body`} cx="38%" cy="32%" r="66%">
                 <stop offset="0%"   stopColor="#383838" />
                 <stop offset="30%"  stopColor="#161616" />
                 <stop offset="100%" stopColor="#050505" />
               </radialGradient>
-              <radialGradient id="vd-label" cx="36%" cy="30%" r="70%">
+              <radialGradient id={`${uid}-label`} cx="36%" cy="30%" r="70%">
                 <stop offset="0%"   stopColor="#e8c458" />
                 <stop offset="40%"  stopColor="#c8a030" />
                 <stop offset="100%" stopColor="#6e480a" />
               </radialGradient>
-              <radialGradient id="vd-shine" cx="25%" cy="20%" r="56%">
+              <radialGradient id={`${uid}-shine`} cx="25%" cy="20%" r="56%">
                 <stop offset="0%"   stopColor="white" stopOpacity="0.22" />
                 <stop offset="55%"  stopColor="white" stopOpacity="0.05" />
                 <stop offset="100%" stopColor="white" stopOpacity="0" />
@@ -103,7 +105,7 @@ export default function VinylDisc() {
             </defs>
 
             {/* Thân đĩa */}
-            <circle cx={R} cy={R} r={R} fill="url(#vd-body)" />
+            <circle cx={R} cy={R} r={R} fill={`url(#${uid}-body)`} />
 
             {/* Rãnh đĩa */}
             {[44,41,38,35,32,29,26,23,20].map((r, i) => (
@@ -118,7 +120,7 @@ export default function VinylDisc() {
             <circle cx={R - 28} cy={R + 24} r={2.2} fill="#C8A84A" fillOpacity="0.7" />
 
             {/* Label trung tâm */}
-            <circle cx={R} cy={R} r={LABEL_R + 1} fill="url(#vd-label)" />
+            <circle cx={R} cy={R} r={LABEL_R + 1} fill={`url(#${uid}-label)`} />
 
             {/* ── Sector bất đối xứng trên label — rõ khi xoay ── */}
             <path d={SECTOR_PATH} fill="rgba(0,0,0,0.38)" />
@@ -131,7 +133,7 @@ export default function VinylDisc() {
             <circle cx={R} cy={R} r={3.8} fill="#040404" />
 
             {/* Shine */}
-            <circle cx={R} cy={R} r={R} fill="url(#vd-shine)" />
+            <circle cx={R} cy={R} r={R} fill={`url(#${uid}-shine)`} />
 
             {/* Viền ngoài */}
             <circle cx={R} cy={R} r={R - 0.5} fill="none" stroke="white" strokeOpacity="0.09" strokeWidth="1.2" />
@@ -191,19 +193,19 @@ export default function VinylDisc() {
           width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none"
         >
           <defs>
-            <radialGradient id="vd-pg" cx="35%" cy="30%" r="68%">
+            <radialGradient id={`${uid}-pg`} cx="35%" cy="30%" r="68%">
               <stop offset="0%"   stopColor="#f0d068" />
               <stop offset="50%"  stopColor="#c8a030" />
               <stop offset="100%" stopColor="#6e480a" />
             </radialGradient>
-            <radialGradient id="vd-pt" cx="35%" cy="30%" r="65%">
+            <radialGradient id={`${uid}-pt`} cx="35%" cy="30%" r="65%">
               <stop offset="0%"   stopColor="#ffe080" />
               <stop offset="100%" stopColor="#b88a20" />
             </radialGradient>
           </defs>
           <circle cx={PX} cy={PY} r={12}  fill="#111" />
-          <circle cx={PX} cy={PY} r={10}  fill="url(#vd-pg)" />
-          <circle cx={PX} cy={PY} r={7}   fill="url(#vd-pt)" />
+          <circle cx={PX} cy={PY} r={10}  fill={`url(#${uid}-pg)`} />
+          <circle cx={PX} cy={PY} r={7}   fill={`url(#${uid}-pt)`} />
           <circle cx={PX - 2} cy={PY - 2} r={3} fill="white" fillOpacity="0.3" />
           <circle cx={PX} cy={PY} r={2.8} fill="#111" />
           <circle cx={PX} cy={PY} r={1.3} fill="#2a2a2a" />

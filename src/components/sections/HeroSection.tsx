@@ -343,21 +343,27 @@ export default function HeroSection({
             fill priority className="object-cover object-center" sizes="100vw" />
         </motion.div>
       )}
-      {/* Desktop: blurred backdrop lấp đầy + ảnh sắc nét contain ở trên */}
+      {/* Desktop: blurred backdrop — lấp đầy toàn bộ section */}
       {imageUrl && (
         <div className="absolute inset-0 hidden md:block">
-          {/* Backdrop mờ — lấp đầy vùng trống hai bên */}
           <Image src={imageUrl} alt="" fill aria-hidden
             className="object-cover object-center scale-110"
             style={{ filter: 'blur(24px) brightness(0.45)' }}
             sizes="100vw" />
-          {/* Ảnh chính — hiện đầy đủ, không cắt */}
+        </div>
+      )}
+      {/* Desktop: ảnh sharp — container cao hơn viewport để ảnh rộng hơn */}
+      {imageUrl && (
+        <div className="absolute hidden md:block -top-[25%] -bottom-[25%] left-0 right-0">
           <Image src={imageUrl} alt={`${groomName} & ${brideName}`}
             fill priority className="object-contain object-center" sizes="100vw" />
         </div>
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/85 z-[1]" />
+      {/* Gradient mobile */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/85 z-[1] md:hidden" />
+      {/* Gradient desktop — tối mạnh phía trên để che header text */}
+      <div className="absolute inset-0 z-[1] hidden md:block" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.55) 15%, rgba(0,0,0,0.20) 40%, rgba(0,0,0,0.20) 65%, rgba(0,0,0,0.80) 100%)' }} />
 
       <GodRays />
       <AuroraGlow />
@@ -368,29 +374,29 @@ export default function HeroSection({
       <MiniFireworks />
 
       {/* Corner ornaments */}
-      <svg className="absolute top-16 left-5 sm:top-20 sm:left-8 w-8 h-8 sm:w-12 sm:h-12 text-gold/50 pointer-events-none z-[3]" viewBox="0 0 48 48" fill="none">
+      <svg className="absolute top-16 left-5 sm:top-20 sm:left-8 w-8 h-8 sm:w-12 sm:h-12 text-gold/50 pointer-events-none z-20" viewBox="0 0 48 48" fill="none">
         <line x1="1" y1="1" x2="22" y2="1" stroke="currentColor" strokeWidth="1.5"/>
         <line x1="1" y1="1" x2="1" y2="22" stroke="currentColor" strokeWidth="1.5"/>
         <circle cx="1" cy="1" r="2.2" fill="currentColor"/>
       </svg>
-      <svg className="absolute top-16 right-5 sm:top-20 sm:right-8 w-8 h-8 sm:w-12 sm:h-12 text-gold/50 pointer-events-none z-[3]" viewBox="0 0 48 48" fill="none">
+      <svg className="absolute top-16 right-5 sm:top-20 sm:right-8 w-8 h-8 sm:w-12 sm:h-12 text-gold/50 pointer-events-none z-20" viewBox="0 0 48 48" fill="none">
         <line x1="47" y1="1" x2="26" y2="1" stroke="currentColor" strokeWidth="1.5"/>
         <line x1="47" y1="1" x2="47" y2="22" stroke="currentColor" strokeWidth="1.5"/>
         <circle cx="47" cy="1" r="2.2" fill="currentColor"/>
       </svg>
-      <svg className="absolute bottom-16 left-5 sm:bottom-8 sm:left-8 w-8 h-8 sm:w-12 sm:h-12 text-gold/50 pointer-events-none z-[3]" viewBox="0 0 48 48" fill="none">
+      <svg className="absolute bottom-16 left-5 sm:bottom-8 sm:left-8 w-8 h-8 sm:w-12 sm:h-12 text-gold/50 pointer-events-none z-20" viewBox="0 0 48 48" fill="none">
         <line x1="1" y1="47" x2="22" y2="47" stroke="currentColor" strokeWidth="1.5"/>
         <line x1="1" y1="47" x2="1" y2="26" stroke="currentColor" strokeWidth="1.5"/>
         <circle cx="1" cy="47" r="2.2" fill="currentColor"/>
       </svg>
-      <svg className="absolute bottom-16 right-5 sm:bottom-8 sm:right-8 w-8 h-8 sm:w-12 sm:h-12 text-gold/50 pointer-events-none z-[3]" viewBox="0 0 48 48" fill="none">
+      <svg className="absolute bottom-16 right-5 sm:bottom-8 sm:right-8 w-8 h-8 sm:w-12 sm:h-12 text-gold/50 pointer-events-none z-20" viewBox="0 0 48 48" fill="none">
         <line x1="47" y1="47" x2="26" y2="47" stroke="currentColor" strokeWidth="1.5"/>
         <line x1="47" y1="47" x2="47" y2="26" stroke="currentColor" strokeWidth="1.5"/>
         <circle cx="47" cy="47" r="2.2" fill="currentColor"/>
       </svg>
 
       {/* ===== NỘI DUNG TRÊN ===== */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4 xs:px-6 w-full max-w-lg mx-auto pt-20 sm:pt-24 md:pt-28">
+      <div className="relative z-10 flex flex-col items-center text-center px-4 xs:px-6 w-full max-w-lg mx-auto pt-20 sm:pt-24 md:hidden">
 
         <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -463,10 +469,91 @@ export default function HeroSection({
         </Fragment>
       </div>
 
-      <div className="flex-1" />
+      {/* ===== DESKTOP LAYOUT (md+) — absolute overlay ===== */}
+      <div className="absolute inset-0 z-10 hidden md:flex flex-col items-center">
+        <Fragment key={animKey}>
+          {/* Top center: Lễ thành hôn + 囍 circle — sát navbar */}
+          <div className="flex flex-col items-center pt-20 w-full">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-sans text-xs tracking-[0.4em] uppercase text-cream/70 mb-4"
+            >
+              Lễ thành hôn
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.45, ease: [0.34, 1.56, 0.64, 1] }}
+              className="w-12 h-12 rounded-full border-2 border-gold flex items-center justify-center"
+              style={{ boxShadow: '0 0 20px rgba(200,168,74,0.35), 0 0 0 1px rgba(200,168,74,0.15)' }}
+            >
+              <span
+                className="text-gold font-bold leading-none select-none"
+                style={{ fontFamily: 'var(--font-playfair)', fontSize: '1.4rem' }}
+              >囍</span>
+            </motion.div>
+          </div>
 
-      {/* ===== NỘI DUNG DƯỚI ===== */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pb-14 sm:pb-18">
+          {/* Middle: names on the blurred side areas */}
+          <div className="flex-1 w-full flex items-center">
+            {/* Groom — left blurred area */}
+            <div className="w-[24%] flex flex-col items-center text-center px-6 lg:px-10">
+              {groomTitle && (
+                <motion.p
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  className="font-sans text-[9px] lg:text-[10px] tracking-[0.3em] uppercase text-gold/80 mb-2 leading-none"
+                >{groomTitle}</motion.p>
+              )}
+              <RevealName text={groomName} delay={0.6}
+                style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(1.6rem, 2.3vw, 3rem)', letterSpacing: '0.06em' }} />
+            </div>
+
+            {/* Center spacer — photo area */}
+            <div className="flex-1" />
+
+            {/* Bride — right blurred area */}
+            <div className="w-[24%] flex flex-col items-center text-center px-6 lg:px-10">
+              {brideTitle && (
+                <motion.p
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: brideRevealDelay }}
+                  className="font-sans text-[9px] lg:text-[10px] tracking-[0.3em] uppercase text-gold/80 mb-2 leading-none"
+                >{brideTitle}</motion.p>
+              )}
+              <RevealName text={brideName} delay={brideRevealDelay}
+                style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(1.6rem, 2.3vw, 3rem)', letterSpacing: '0.06em' }} />
+            </div>
+          </div>
+
+          {/* Quote */}
+          <motion.p
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: quoteDelay - 0.2 }}
+            className="font-sans text-[10px] tracking-[0.3em] uppercase text-cream/60 mb-4"
+          >
+            <TypewriterText text={heroQuote || 'Love never fails'} startDelay={quoteDelay} />
+          </motion.p>
+
+          {/* Date + Vinyl */}
+          <div className="flex flex-col items-center pb-14">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.4 }}
+              className="flex flex-col items-center gap-1 mb-4"
+            >
+              <p className="font-sans text-xs tracking-widest text-cream/65">{datePart}</p>
+              <p className="font-serif italic text-gold text-xl tracking-[0.2em]">{timePart}</p>
+            </motion.div>
+            <div className="scale-[0.78] origin-center"><VinylDisc /></div>
+          </div>
+        </Fragment>
+      </div>
+
+      <div className="flex-1 md:hidden" />
+
+      {/* ===== NỘI DUNG DƯỚI (mobile only) ===== */}
+      <div className="relative z-10 flex flex-col items-center text-center px-4 w-full pb-14 sm:pb-18 md:hidden">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.4 }}
           className="flex flex-col items-center gap-1 mb-4"
@@ -474,11 +561,11 @@ export default function HeroSection({
           <p className="font-sans text-xs sm:text-sm tracking-widest text-cream/65">{datePart}</p>
           <p className="font-serif italic text-gold text-xl sm:text-2xl tracking-[0.2em]">{timePart}</p>
         </motion.div>
-        <div className="scale-[0.78] origin-center"><VinylDisc /></div>
+        <VinylDisc />
       </div>
 
           <motion.button
-            onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('details')?.scrollIntoView({ behavior: 'smooth' })}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 2.5 }}
             className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 text-cream/50 hover:text-cream transition-colors p-2 z-10"
