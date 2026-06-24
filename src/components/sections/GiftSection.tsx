@@ -172,7 +172,7 @@ export default function GiftSection({ accounts }: { accounts: BankAccount[] }) {
 
   return (
     <SectionWrapper id="gift" className="section-padding bg-blush/10">
-      <SectionHeader eyebrow="Hộp quà cưới" title="Mừng cưới" ornament="♡" />
+      <SectionHeader eyebrow="Hộp quà cưới" title="Mừng cưới" ornament="♡" icon={<Gift size={36} strokeWidth={1.4} />} />
 
       <motion.p
         initial={{ opacity: 0 }}

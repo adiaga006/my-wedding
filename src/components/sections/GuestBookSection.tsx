@@ -2,7 +2,7 @@
 
 import { useActionState, useState, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { CheckCircle, Loader2, Send, ChevronLeft, ChevronRight } from 'lucide-react'
+import { CheckCircle, Loader2, Send, ChevronLeft, ChevronRight, Heart } from 'lucide-react'
 import { submitGuestbook } from '@/actions/guestbook'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
@@ -155,7 +155,7 @@ export default function GuestBookSection({ initialMessages }: { initialMessages:
   return (
     <>
       <SectionWrapper id="guestbook" className="section-padding bg-charcoal">
-        <SectionHeader eyebrow="Gửi lời yêu thương" title="Sổ lưu bút" dark />
+        <SectionHeader eyebrow="Gửi lời yêu thương" title="Sổ lưu bút" dark icon={<Heart size={36} strokeWidth={1.4} />} />
 
         <div className="max-w-lg mx-auto">
           {state?.success ? (
