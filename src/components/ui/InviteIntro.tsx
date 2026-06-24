@@ -114,11 +114,11 @@ export default function InviteIntro({
           <FloralDivider />
         </motion.div>
 
-        {/* Tên chú rể — Great Vibes */}
+        {/* Tên chú rể */}
         <motion.h1
           {...fadeUp(0.6)}
-          style={{ fontFamily: 'var(--font-display)', lineHeight: 1, fontSize: 'clamp(3rem, 12vw, 5.5rem)' }}
-          className="text-charcoal mb-1"
+          style={{ fontFamily: 'var(--font-playfair)', lineHeight: 1, fontSize: 'clamp(2.8rem, 12vw, 5.2rem)', letterSpacing: '0.06em' }}
+          className="text-charcoal font-semibold italic mb-1"
         >
           {groomName}
         </motion.h1>
@@ -126,8 +126,8 @@ export default function InviteIntro({
         {/* & */}
         <motion.p
           {...fadeUp(0.72)}
-          style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 7vw, 3.5rem)' }}
-          className="text-gold leading-none my-1"
+          style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(1.8rem, 7vw, 3.2rem)', fontStyle: 'italic' }}
+          className="text-gold leading-none my-1.5"
         >
           &amp;
         </motion.p>
@@ -135,8 +135,8 @@ export default function InviteIntro({
         {/* Tên cô dâu */}
         <motion.h1
           {...fadeUp(0.84)}
-          style={{ fontFamily: 'var(--font-display)', lineHeight: 1, fontSize: 'clamp(3rem, 12vw, 5.5rem)' }}
-          className="text-charcoal mb-5 sm:mb-8"
+          style={{ fontFamily: 'var(--font-playfair)', lineHeight: 1, fontSize: 'clamp(2.8rem, 12vw, 5.2rem)', letterSpacing: '0.06em' }}
+          className="text-charcoal font-semibold italic mb-5 sm:mb-8"
         >
           {brideName}
         </motion.h1>
@@ -173,7 +173,12 @@ export default function InviteIntro({
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{ background: 'linear-gradient(135deg, #C8A84A, #A6852E)' }}
             />
-            <span className="relative">Mở thiệp ♡</span>
+            <span className="relative flex items-center gap-2.5">
+              Mở thiệp
+              <svg width="18" height="16" viewBox="0 0 36 34" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" className="flex-shrink-0" style={{ color: '#F4A0B0' }}>
+                <path d="M18 30C18 30 3 20.5 3 11.5C3 7.36 6.36 4 10.5 4C13.24 4 15.65 5.48 17 7.7C18.35 5.48 20.76 4 23.5 4C27.64 4 31 7.36 31 11.5C31 20.5 18 30 18 30Z"/>
+              </svg>
+            </span>
           </motion.button>
         </motion.div>
       </div>

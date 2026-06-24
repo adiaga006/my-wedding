@@ -1,10 +1,135 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { MapPin, Clock, Map, X } from 'lucide-react'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
+
+interface TimeLeft { days: number; hours: number; minutes: number; seconds: number }
+
+function getTimeLeft(targetDate: string): TimeLeft {
+  const diff = Math.max(0, new Date(targetDate).getTime() - Date.now())
+  return {
+    days: Math.floor(diff / 86400000),
+    hours: Math.floor((diff / 3600000) % 24),
+    minutes: Math.floor((diff / 60000) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+  }
+}
+
+function WeddingCalendar({ date }: { date: Date }) {
+  const year = date.getFullYear()
+  const month = date.getMonth()
+  const weddingDay = date.getDate()
+
+  const firstDow = new Date(year, month, 1).getDay()
+  const startOffset = (firstDow + 6) % 7 // Mon-first offset
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+  const monthLabel = date.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric', timeZone: 'Asia/Ho_Chi_Minh' })
+  const dayHeaders = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+
+  const cells: (number | null)[] = [
+    ...Array(startOffset).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ]
+
+  return (
+    <div className="inline-block bg-white border border-blush/30 p-4 xs:p-5 w-full max-w-[272px] xs:max-w-[300px] sm:max-w-xs mx-auto">
+      <p className="font-sans text-[10px] xs:text-xs tracking-[0.3em] uppercase text-charcoal-light text-center mb-4">
+        {monthLabel}
+      </p>
+      <div className="grid grid-cols-7 mb-1.5">
+        {dayHeaders.map((d, i) => (
+          <div key={d} className={`text-center font-sans text-[9px] xs:text-[10px] tracking-wide uppercase pb-2 ${i === 6 ? 'text-rose-400' : 'text-charcoal-light'}`}>
+            {d}
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-7 gap-y-0.5">
+        {cells.map((day, idx) => {
+          const isWedding = day === weddingDay
+          const isSun = idx % 7 === 6
+          return (
+            <div key={idx} className="flex items-center justify-center h-7 xs:h-8">
+              {day !== null && (
+                isWedding ? (
+                  <span className="relative flex items-center justify-center w-8 h-8 xs:w-9 xs:h-9">
+                    <svg className="absolute inset-0 w-full h-full text-pink-400" viewBox="0 0 36 34" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round">
+                      <path d="M18 30C18 30 3 20.5 3 11.5C3 7.36 6.36 4 10.5 4C13.24 4 15.65 5.48 17 7.7C18.35 5.48 20.76 4 23.5 4C27.64 4 31 7.36 31 11.5C31 20.5 18 30 18 30Z"/>
+                    </svg>
+                    <span className="relative font-sans text-[10px] xs:text-[11px] font-semibold text-pink-500 leading-none z-10 mt-0.5">
+                      {day}
+                    </span>
+                  </span>
+                ) : (
+                  <span className={`w-6 h-6 xs:w-7 xs:h-7 flex items-center justify-center text-[10px] xs:text-[11px] font-sans rounded-full
+                    ${isSun ? 'text-rose-400' : 'text-charcoal'}`}>
+                    {day}
+                  </span>
+                )
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function WeddingCountdown({ targetDate }: { targetDate: string }) {
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null)
+
+  useEffect(() => {
+    setTimeLeft(getTimeLeft(targetDate))
+    const t = setInterval(() => setTimeLeft(getTimeLeft(targetDate)), 1000)
+    return () => clearInterval(t)
+  }, [targetDate])
+
+  if (!timeLeft) return null
+
+  if (new Date(targetDate).getTime() <= Date.now()) {
+    return (
+      <p className="font-serif italic text-charcoal/60 text-center mt-6 text-lg">
+        Hôm nay là ngày trọng đại của chúng mình 🎊
+      </p>
+    )
+  }
+
+  const units = [
+    { label: 'Ngày', value: timeLeft.days },
+    { label: 'Giờ', value: timeLeft.hours },
+    { label: 'Phút', value: timeLeft.minutes },
+    { label: 'Giây', value: timeLeft.seconds },
+  ]
+
+  return (
+    <div className="mt-6 sm:mt-8">
+      <p className="font-sans text-[9px] xs:text-[10px] tracking-[0.35em] uppercase text-charcoal-light text-center mb-4">
+        Đếm ngược
+      </p>
+      <div className="flex items-center justify-center">
+        {units.map((unit, i) => (
+          <div key={unit.label} className="flex items-center">
+            <div className="text-center px-2 xs:px-3 sm:px-4">
+              <div className="font-serif text-gold font-light leading-none tabular-nums"
+                style={{ fontSize: 'clamp(1.5rem, 5.5vw, 2.6rem)', textShadow: '0 1px 4px rgba(180,140,60,0.25)' }}>
+                {String(unit.value).padStart(2, '0')}
+              </div>
+              <div className="font-sans text-[9px] xs:text-[10px] tracking-widest uppercase text-charcoal-light mt-1.5">
+                {unit.label}
+              </div>
+            </div>
+            {i < 3 && (
+              <span className="font-serif text-xl xs:text-2xl text-gold/40 mb-4 select-none">:</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 interface Venue {
   name?: string
@@ -143,10 +268,59 @@ export default function DetailsSection({
             className="mb-10 sm:mb-14"
           >
             <div className="border border-blush/30 bg-white rounded-sm px-4 xs:px-7 sm:px-10 py-8 sm:py-10">
-              {/* Two families */}
-              <div className="grid grid-cols-1 xs:grid-cols-2 gap-5 xs:gap-4 sm:gap-8 mb-6 sm:mb-8">
-                <FamilyBlock label="Nhà Trai" family={groomFamily} fullName={groomFullName} title={groomTitle} />
-                <FamilyBlock label="Nhà Gái" family={brideFamily} fullName={brideFullName} title={brideTitle} />
+              {/* Two families — shared grid so each row aligns across both sides */}
+              <div className="grid grid-cols-2 gap-x-4 sm:gap-x-8 mb-6 sm:mb-8">
+                {/* Labels */}
+                <p className="font-sans text-[10px] xs:text-xs tracking-[0.35em] uppercase text-gold text-center pb-3">Nhà Trai</p>
+                <p className="font-sans text-[10px] xs:text-xs tracking-[0.35em] uppercase text-gold text-center pb-3">Nhà Gái</p>
+
+                {/* Father names */}
+                {(groomFamily?.fatherName || brideFamily?.fatherName) && (
+                  <>
+                    <div className="text-center">
+                      {groomFamily?.fatherName ? <>
+                        <p className="font-sans text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Ông</p>
+                        <p className="font-sans text-[11px] xs:text-xs text-charcoal font-medium leading-snug">{groomFamily.fatherName}</p>
+                      </> : null}
+                    </div>
+                    <div className="text-center">
+                      {brideFamily?.fatherName ? <>
+                        <p className="font-sans text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Ông</p>
+                        <p className="font-sans text-[11px] xs:text-xs text-charcoal font-medium leading-snug">{brideFamily.fatherName}</p>
+                      </> : null}
+                    </div>
+                  </>
+                )}
+
+                {/* Mother names */}
+                {(groomFamily?.motherName || brideFamily?.motherName) && (
+                  <>
+                    <div className="text-center mt-2">
+                      {groomFamily?.motherName ? <>
+                        <p className="font-sans text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Bà</p>
+                        <p className="font-sans text-[11px] xs:text-xs text-charcoal font-medium leading-snug">{groomFamily.motherName}</p>
+                      </> : null}
+                    </div>
+                    <div className="text-center mt-2">
+                      {brideFamily?.motherName ? <>
+                        <p className="font-sans text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Bà</p>
+                        <p className="font-sans text-[11px] xs:text-xs text-charcoal font-medium leading-snug">{brideFamily.motherName}</p>
+                      </> : null}
+                    </div>
+                  </>
+                )}
+
+                {/* Addresses */}
+                {(groomFamily?.address || brideFamily?.address) && (
+                  <>
+                    <p className="font-sans text-[10px] xs:text-[11px] text-charcoal-light leading-relaxed mt-1.5 italic text-center">
+                      {groomFamily?.address}
+                    </p>
+                    <p className="font-sans text-[10px] xs:text-[11px] text-charcoal-light leading-relaxed mt-1.5 italic text-center">
+                      {brideFamily?.address}
+                    </p>
+                  </>
+                )}
               </div>
 
               {/* Divider */}
@@ -197,27 +371,36 @@ export default function DetailsSection({
           </motion.div>
         )}
 
-        {/* Big date block */}
+        {/* Calendar + date + countdown */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-10 sm:mb-14"
+          className="text-center mb-10 sm:mb-14 flex flex-col items-center"
         >
-          <p className="font-sans text-sm sm:text-base tracking-[0.45em] uppercase text-charcoal-light mb-4">
+          {/* Thứ + ngày */}
+          <p className="font-sans text-sm sm:text-base tracking-[0.45em] uppercase text-charcoal-light mb-2">
             {weekday}
           </p>
           <p
-            className="font-serif font-light text-charcoal leading-none mb-4"
+            className="font-serif font-light text-charcoal leading-none mb-2"
             style={{ fontSize: 'clamp(2.2rem, 9vw, 4.5rem)', letterSpacing: 'clamp(0.02em, 0.8vw, 0.08em)' }}
           >
             {dateNum}
           </p>
           {venue?.lunarDate && (
-            <p className="font-sans text-xs sm:text-sm text-charcoal-light italic tracking-wide px-4">
+            <p className="font-sans text-xs sm:text-sm text-charcoal-light italic tracking-wide px-4 mb-0">
               ({venue.lunarDate})
             </p>
           )}
+
+          {/* Lịch tháng */}
+          <div className="mt-6">
+            <WeddingCalendar date={date} />
+          </div>
+
+          {/* Đếm ngược */}
+          <WeddingCountdown targetDate={weddingDate} />
         </motion.div>
 
         {/* Venue card */}

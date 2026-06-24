@@ -71,6 +71,8 @@ export default async function HomePage() {
         <HeroSection
           groomName={config?.groomName || 'Duy'}
           brideName={config?.brideName || 'Chi'}
+          groomTitle={config?.groomTitle}
+          brideTitle={config?.brideTitle}
           weddingDate={weddingDate}
           heroImage={config?.heroImage}
           heroQuote={config?.heroQuote}
