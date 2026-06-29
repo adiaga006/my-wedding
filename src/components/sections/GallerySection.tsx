@@ -43,11 +43,11 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
     return () => window.removeEventListener('keydown', onKey)
   }, [navigate])
 
-  const onTouchStart = (e: { targetTouches: TouchList }) => {
+  const onTouchStart = (e: { targetTouches: { [n: number]: { clientX: number } } }) => {
     touchStartX.current = e.targetTouches[0].clientX
     touchEndX.current = null
   }
-  const onTouchMove = (e: { targetTouches: TouchList }) => {
+  const onTouchMove = (e: { targetTouches: { [n: number]: { clientX: number } } }) => {
     touchEndX.current = e.targetTouches[0].clientX
   }
   const onTouchEnd = () => {
@@ -88,24 +88,27 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
     const abs = Math.abs(offset)
     const sign = Math.sign(offset)
 
-    // Only render ±2 neighbors
-    if (abs > 2) return { display: 'none' }
+    if (abs > 3) return { display: 'none' as const }
 
-    // X shift in vw from center (clamped to avoid going too far on large screens)
-    const xShiftVw = abs === 0 ? 0 : abs === 1 ? 38 : 68
-    const tx = `calc(-50% + ${sign * xShiftVw}vw)`
+    // X shift: min(vw, px) so it's proportional on mobile but capped on wide desktop
+    // mobile ~375px: ±1→135px, ±2→235px, ±3→320px
+    // desktop ~1440px: ±1→210px, ±2→370px, ±3→520px (capped)
+    const xShifts = ['0', 'min(36vw, 210px)', 'min(64vw, 370px)', 'min(88vw, 520px)']
+    const tx = abs === 0
+      ? 'translateX(-50%)'
+      : `translateX(calc(-50% + ${sign < 0 ? '-1 * ' : ''}${xShifts[abs]}))`
 
-    const rotateY = abs === 0 ? 0 : sign * -32   // lean toward center
-    const scale   = [1, 0.77, 0.60][abs]
-    const opacity = [1, 0.82, 0.48][abs]
-    const zIndex  = [10, 6, 3][abs]
+    const rotateY = abs === 0 ? 0 : sign * -30
+    const scale   = [1, 0.78, 0.62, 0.50][abs]
+    const opacity = [1, 0.85, 0.55, 0.28][abs]
+    const zIndex  = [10, 7, 4, 1][abs]
 
     return {
-      position:   'absolute',
+      position:   'absolute' as const,
       top: 0, bottom: 0,
       left:       '50%',
-      width:      'clamp(180px, 50vw, 420px)',
-      transform:  `translateX(${tx}) rotateY(${rotateY}deg) scale(${scale})`,
+      width:      'clamp(160px, 46vw, 400px)',
+      transform:  `${tx} rotateY(${rotateY}deg) scale(${scale})`,
       opacity,
       zIndex,
       transition: 'transform 0.52s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.52s ease',
@@ -159,7 +162,7 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
           {images.map((img, i) => {
             const offset = getOffset(i)
             const abs    = Math.abs(offset)
-            if (abs > 2) return null
+            if (abs > 3) return null
 
             const style  = cardStyle(offset)
             const src    = urlFor(img).width(900).url()
