@@ -332,15 +332,13 @@ export default function HeroSection({
 
       <div className="absolute inset-0 bg-charcoal" />
 
-      {/* Mobile: Ken Burns + Parallax + cover */}
+      {/* Mobile: parallax + contain (no crop) */}
       {imageUrl && (
         <motion.div className="absolute inset-0 md:hidden"
-          initial={{ scale: 1.05 }} animate={{ scale: 1.0 }}
-          transition={{ duration: 7, ease: [0.25, 0.46, 0.45, 0.94] }}
           style={{ y: bgY }}
         >
           <Image src={imageUrl} alt={`${groomName} & ${brideName}`}
-            fill priority className="object-cover object-center" sizes="100vw" />
+            fill priority className="object-contain object-center" sizes="100vw" />
         </motion.div>
       )}
       {/* Desktop: blurred backdrop — lấp đầy toàn bộ section */}
