@@ -300,7 +300,7 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
         slides={slides}
         open={lightboxIndex >= 0}
         index={lightboxIndex}
-        close={() => setLightboxIndex(-1)}
+        close={() => { setIndex(lightboxIndex); setLightboxIndex(-1) }}
         on={{ view: ({ index: i }: { index: number }) => setLightboxIndex(i) }}
         styles={{ container: { backgroundColor: 'rgba(0,0,0,0.97)' } }}
       />
