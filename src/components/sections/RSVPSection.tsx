@@ -114,8 +114,11 @@ export default function RSVPSection() {
   const submitLabel = attending === false ? 'Xác nhận không tham dự' : 'Xác nhận tham dự'
 
   return (
-    <SectionWrapper id="rsvp" className="section-padding bg-cream">
-      <SectionHeader eyebrow="Xác nhận tham dự" title="Bạn sẽ đến chứ?" />
+    <SectionWrapper id="rsvp" className="overflow-hidden">
+      <div className="bg-charcoal py-3 sm:py-5 px-4 sm:px-10">
+        <SectionHeader eyebrow="Xác nhận tham dự" title="Bạn sẽ đến chứ?" dark  compact />
+      </div>
+      <div className="section-padding bg-cream">
 
       <div className="max-w-lg mx-auto">
         <AnimatePresence mode="wait">
@@ -197,6 +200,7 @@ export default function RSVPSection() {
           )}
         </AnimatePresence>
       </div>
+      </div>{/* end section-padding */}
     </SectionWrapper>
   )
 }

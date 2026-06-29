@@ -48,8 +48,11 @@ export default function FAQSection({ items }: { items: FAQItem[] }) {
   if (items.length === 0) return null
 
   return (
-    <SectionWrapper id="faq" className="section-padding bg-cream">
-      <SectionHeader eyebrow="Câu hỏi thường gặp" title="FAQ" ornament="?" />
+    <SectionWrapper id="faq" className="overflow-hidden">
+      <div className="bg-charcoal py-3 sm:py-5 px-4 sm:px-10">
+        <SectionHeader eyebrow="Câu hỏi thường gặp" title="FAQ" ornament="?" dark  compact />
+      </div>
+      <div className="section-padding bg-cream">
       <div className="max-w-2xl mx-auto">
         {items.map((item) => (
           <AccordionItem
@@ -60,6 +63,7 @@ export default function FAQSection({ items }: { items: FAQItem[] }) {
           />
         ))}
       </div>
+      </div>{/* end section-padding */}
     </SectionWrapper>
   )
 }

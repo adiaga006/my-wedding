@@ -20,7 +20,7 @@ function MemberCard({ member, index }: { member: PartyMember; index: number }) {
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
+      viewport={{ once: false, margin: '-40px' }}
       transition={{ duration: 0.55, delay: (index % 4) * 0.08 }}
       className="text-center group"
     >
@@ -56,8 +56,11 @@ export default function WeddingPartySection({ members }: { members: PartyMember[
   if (members.length === 0) return null
 
   return (
-    <SectionWrapper id="party" className="section-padding bg-cream">
-      <SectionHeader eyebrow="Những người bạn đồng hành" title="Đội hình cưới" />
+    <SectionWrapper id="party" className="overflow-hidden">
+      <div className="bg-charcoal py-3 sm:py-5 px-4 sm:px-10">
+        <SectionHeader eyebrow="Những người bạn đồng hành" title="Đội hình cưới" dark  compact />
+      </div>
+      <div className="section-padding bg-cream">
 
       {groomTeam.length > 0 && (
         <div className="max-w-5xl mx-auto mb-16 sm:mb-20">
@@ -85,6 +88,7 @@ export default function WeddingPartySection({ members }: { members: PartyMember[
           </div>
         </div>
       )}
+      </div>{/* end section-padding */}
     </SectionWrapper>
   )
 }

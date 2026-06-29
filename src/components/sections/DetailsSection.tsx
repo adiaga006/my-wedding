@@ -254,8 +254,11 @@ export default function DetailsSection({
   const hasFamilyInfo = groomFamily?.fatherName || groomFamily?.motherName || brideFamily?.fatherName || brideFamily?.motherName
 
   return (
-    <SectionWrapper id="details" className="section-padding bg-blush/10">
-      <SectionHeader eyebrow="Ngày trọng đại" title="Thông tin hôn lễ" />
+    <SectionWrapper id="details" className="overflow-hidden">
+      <div className="bg-charcoal py-3 sm:py-5 px-4 sm:px-10">
+        <SectionHeader eyebrow="Ngày trọng đại" title="Thông tin hôn lễ" dark  compact />
+      </div>
+      <div className="section-padding bg-blush/10">
 
       <div className="max-w-2xl mx-auto">
 
@@ -264,7 +267,7 @@ export default function DetailsSection({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             className="mb-10 sm:mb-14"
           >
             <div className="border border-blush/30 bg-white rounded-sm px-4 xs:px-7 sm:px-10 py-8 sm:py-10">
@@ -375,7 +378,7 @@ export default function DetailsSection({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           className="text-center mb-10 sm:mb-14 flex flex-col items-center"
         >
           {/* Thứ + ngày */}
@@ -408,7 +411,7 @@ export default function DetailsSection({
           <motion.div
             initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="relative bg-white shadow-sm hover:shadow-lg transition-shadow duration-500"
           >
@@ -512,7 +515,7 @@ export default function DetailsSection({
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 1, delay: 0.3 }}
           className="text-center font-serif italic text-charcoal-light text-base sm:text-lg mt-10 sm:mt-12 px-4"
         >
@@ -525,6 +528,7 @@ export default function DetailsSection({
           <MapModal embedUrl={extractMapSrc(venue.mapEmbed)} name={venue.name || ''} onClose={() => setShowMap(false)} />
         )}
       </AnimatePresence>
+      </div>{/* end section-padding */}
     </SectionWrapper>
   )
 }

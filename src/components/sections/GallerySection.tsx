@@ -60,11 +60,15 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
 
   if (images.length === 0) {
     return (
-      <SectionWrapper id="gallery" className="section-padding bg-charcoal">
-        <SectionHeader eyebrow="Pre-wedding" title="Album Ảnh Cưới" dark />
-        <p className="text-center text-cream/40 font-serif italic text-lg sm:text-xl py-16">
-          Hình ảnh sẽ được cập nhật sớm...
-        </p>
+      <SectionWrapper id="gallery" className="overflow-hidden">
+        <div className="bg-charcoal py-3 sm:py-5 px-4 sm:px-10">
+          <SectionHeader eyebrow="Pre-wedding" title="Album Ảnh Cưới" dark  compact />
+        </div>
+        <div className="section-padding bg-blush/10">
+          <p className="text-center text-charcoal/50 font-serif italic text-lg sm:text-xl py-16">
+            Hình ảnh sẽ được cập nhật sớm...
+          </p>
+        </div>
       </SectionWrapper>
     )
   }
@@ -88,26 +92,26 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
     const abs = Math.abs(offset)
     const sign = Math.sign(offset)
 
-    if (abs > 3) return { display: 'none' as const }
+    if (abs > 2) return { display: 'none' as const }
 
-    // X shift: min(vw, px) so it's proportional on mobile but capped on wide desktop
-    // mobile ~375px: ±1→135px, ±2→235px, ±3→320px
-    // desktop ~1440px: ±1→210px, ±2→370px, ±3→520px (capped)
-    const xShifts = ['0', 'min(36vw, 210px)', 'min(64vw, 370px)', 'min(88vw, 520px)']
+    // X shift capped on desktop so 5 cards stay compact
+    // mobile ~375px: ±1→133px, ±2→240px
+    // desktop ~1440px: ±1→200px, ±2→360px (capped)
+    const xShifts = ['0', 'min(35vw, 200px)', 'min(64vw, 360px)']
     const tx = abs === 0
       ? 'translateX(-50%)'
       : `translateX(calc(-50% + ${sign < 0 ? '-1 * ' : ''}${xShifts[abs]}))`
 
     const rotateY = abs === 0 ? 0 : sign * -30
-    const scale   = [1, 0.78, 0.62, 0.50][abs]
-    const opacity = [1, 0.85, 0.55, 0.28][abs]
-    const zIndex  = [10, 7, 4, 1][abs]
+    const scale   = [1, 0.74, 0.56][abs]
+    const opacity = [1, 0.82, 0.50][abs]
+    const zIndex  = [10, 6, 3][abs]
 
     return {
       position:   'absolute' as const,
       top: 0, bottom: 0,
       left:       '50%',
-      width:      'clamp(160px, 46vw, 400px)',
+      width:      'clamp(180px, 54vw, 460px)',
       transform:  `${tx} rotateY(${rotateY}deg) scale(${scale})`,
       opacity,
       zIndex,
@@ -118,35 +122,14 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
   }
 
   return (
-    <SectionWrapper id="gallery" className="section-padding bg-charcoal">
-      {/* Custom header — gold metallic on dark bg */}
-      <div className="text-center mb-10 sm:mb-14">
-        <p
-          className="font-sans text-xs tracking-[0.3em] uppercase mb-3"
-          style={{ color: 'rgba(200,168,74,0.65)' }}
-        >
-          Pre-wedding
-        </p>
-        <h2
-          className="font-serif leading-tight"
-          style={{
-            fontSize: 'clamp(1.8rem, 5vw, 3rem)',
-            background:
-              'linear-gradient(135deg, #d4a84b 0%, #f0c96a 40%, #c8971e 70%, #e8b84a 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
-        >
-          Album Ảnh Cưới
-        </h2>
-        <div className="flex items-center justify-center gap-4 mt-5">
-          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold/40" />
-          <span style={{ color: 'rgba(200,168,74,0.6)', fontSize: '1.1rem' }}>❧</span>
-          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold/40" />
-        </div>
+    <SectionWrapper id="gallery" className="overflow-hidden">
+      {/* ── Dark title strip ── */}
+      <div className="bg-charcoal py-3 sm:py-5 px-4 sm:px-10">
+        <SectionHeader eyebrow="Pre-wedding" title="Album Ảnh Cưới" dark  compact />
       </div>
 
+      {/* ── Light content ── */}
+      <div className="section-padding bg-blush/10">
       <div className="relative">
         {/* ── Coverflow track ── */}
         <div
@@ -162,7 +145,7 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
           {images.map((img, i) => {
             const offset = getOffset(i)
             const abs    = Math.abs(offset)
-            if (abs > 3) return null
+            if (abs > 2) return null
 
             const style  = cardStyle(offset)
             const src    = urlFor(img).width(900).url()
@@ -244,9 +227,9 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
               onClick={() => navigate(-1)}
               className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20
                          w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center
-                         rounded-full bg-black/30 hover:bg-black/60
-                         border border-white/12 text-white/70 hover:text-white
-                         transition-all duration-200 backdrop-blur-sm"
+                         rounded-full bg-charcoal/10 hover:bg-charcoal/25
+                         border border-charcoal/20 text-charcoal/60 hover:text-charcoal
+                         transition-all duration-200"
               aria-label="Ảnh trước"
             >
               <ChevronLeft size={20} />
@@ -255,9 +238,9 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
               onClick={() => navigate(1)}
               className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20
                          w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center
-                         rounded-full bg-black/30 hover:bg-black/60
-                         border border-white/12 text-white/70 hover:text-white
-                         transition-all duration-200 backdrop-blur-sm"
+                         rounded-full bg-charcoal/10 hover:bg-charcoal/25
+                         border border-charcoal/20 text-charcoal/60 hover:text-charcoal
+                         transition-all duration-200"
               aria-label="Ảnh tiếp"
             >
               <ChevronRight size={20} />
@@ -269,7 +252,7 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
       {/* ── Counter ── */}
       <p
         className="text-center font-serif text-xs mt-5 tracking-[0.3em]"
-        style={{ color: 'rgba(200,168,74,0.75)' }}
+        style={{ color: 'rgba(140,100,15,0.65)' }}
       >
         {index + 1} / {images.length}
       </p>
@@ -284,7 +267,7 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
               className="h-[3px] rounded-full transition-all duration-300"
               style={{
                 width:      i === index ? 24 : 6,
-                background: i === index ? 'rgba(200,168,74,0.85)' : 'rgba(255,255,255,0.20)',
+                background: i === index ? 'rgba(140,100,15,0.75)' : 'rgba(28,46,20,0.18)',
               }}
               aria-label={`Ảnh ${i + 1}`}
             />
@@ -295,7 +278,7 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
       {/* ── Mobile hint ── */}
       <p
         className="text-center text-[10px] mt-3 sm:hidden font-serif italic tracking-wide"
-        style={{ color: 'rgba(200,168,74,0.55)' }}
+        style={{ color: 'rgba(140,100,15,0.55)' }}
       >
         Vuốt trái / phải để xem ảnh tiếp theo
       </p>
@@ -305,7 +288,7 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
         className="text-center font-serif italic mt-5 sm:mt-6 px-4"
         style={{
           fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)',
-          color: 'rgba(200,168,74,0.6)',
+          color: 'rgba(140,100,15,0.6)',
           letterSpacing: '0.02em',
         }}
       >
@@ -321,6 +304,7 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
         on={{ view: ({ index: i }: { index: number }) => setLightboxIndex(i) }}
         styles={{ container: { backgroundColor: 'rgba(0,0,0,0.97)' } }}
       />
+      </div>{/* end section-padding */}
     </SectionWrapper>
   )
 }

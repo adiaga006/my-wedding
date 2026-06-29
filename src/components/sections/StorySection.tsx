@@ -17,7 +17,7 @@ interface StoryItem {
 
 function TimelineItem({ item, index }: { item: StoryItem; index: number }) {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px 0px' })
+  const inView = useInView(ref, { once: false, margin: '-80px 0px' })
   const isEven = index % 2 === 0
 
   return (
@@ -75,8 +75,11 @@ export default function StorySection({ items }: { items: StoryItem[] }) {
   if (items.length === 0) return null
 
   return (
-    <SectionWrapper id="story" className="section-padding bg-cream">
-      <SectionHeader eyebrow="Câu chuyện của chúng mình" title="Hành trình tình yêu" />
+    <SectionWrapper id="story" className="overflow-hidden">
+      <div className="bg-charcoal py-3 sm:py-5 px-4 sm:px-10">
+        <SectionHeader eyebrow="Câu chuyện của chúng mình" title="Hành trình tình yêu" dark  compact />
+      </div>
+      <div className="section-padding bg-cream">
 
       <div className="max-w-5xl mx-auto relative">
         {/* Vertical line — desktop only */}
@@ -91,6 +94,7 @@ export default function StorySection({ items }: { items: StoryItem[] }) {
           ))}
         </div>
       </div>
+      </div>{/* end section-padding */}
     </SectionWrapper>
   )
 }

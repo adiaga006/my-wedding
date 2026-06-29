@@ -154,9 +154,11 @@ export default function GuestBookSection({ initialMessages }: { initialMessages:
 
   return (
     <>
-      <SectionWrapper id="guestbook" className="section-padding bg-charcoal">
-        <SectionHeader eyebrow="Gửi lời yêu thương" title="Sổ lưu bút" dark icon={<Heart size={36} strokeWidth={1.4} />} />
-
+      <SectionWrapper id="guestbook" className="overflow-hidden">
+        <div className="bg-charcoal py-3 sm:py-5 px-4 sm:px-10">
+          <SectionHeader eyebrow="Gửi lời yêu thương" title="Sổ lưu bút" dark icon={<Heart size={36} strokeWidth={1.4} />}  compact />
+        </div>
+        <div className="section-padding bg-blush/10">
         <div className="max-w-lg mx-auto">
           {state?.success ? (
             <motion.div
@@ -165,22 +167,23 @@ export default function GuestBookSection({ initialMessages }: { initialMessages:
               className="text-center py-10"
             >
               <CheckCircle size={40} className="text-sage mx-auto mb-4" strokeWidth={1} />
-              <p className="font-serif italic text-cream/80 text-lg mb-1">Cảm ơn lời chúc của bạn!</p>
-              <p className="font-sans text-xs tracking-wider text-cream/40">Lời chúc sẽ hiển thị sau khi được duyệt ♡</p>
+              <p className="font-serif italic text-charcoal/80 text-lg mb-1">Cảm ơn lời chúc của bạn!</p>
+              <p className="font-sans text-xs tracking-wider text-charcoal/50">Lời chúc sẽ hiển thị sau khi được duyệt ♡</p>
             </motion.div>
           ) : (
             <form action={action} className="space-y-6">
-              <input className="input-line-dark" name="authorName" placeholder="Tên bạn *" required />
-              <textarea className="input-line-dark resize-none" name="message" placeholder="Lời chúc gửi đến Duy & Chi *" rows={4} required />
-              {state?.error && <p className="text-red-400 text-xs font-sans">{state.error}</p>}
+              <input className="input-line" name="authorName" placeholder="Tên bạn *" required />
+              <textarea className="input-line resize-none" name="message" placeholder="Lời chúc gửi đến Duy & Chi *" rows={4} required />
+              {state?.error && <p className="text-red-600 text-xs font-sans">{state.error}</p>}
               <div className="flex justify-end pt-1">
-                <button type="submit" disabled={isPending} className="btn-primary bg-transparent border-blush/60 text-blush hover:bg-blush hover:text-charcoal hover:border-blush px-8">
+                <button type="submit" disabled={isPending} className="btn-primary px-8">
                   {isPending ? <><Loader2 size={13} className="animate-spin" /> Đang gửi...</> : <><Send size={13} /> Gửi lời chúc</>}
                 </button>
               </div>
             </form>
           )}
         </div>
+        </div>{/* end section-padding */}
       </SectionWrapper>
 
       {initialMessages.length > 0 && (
@@ -189,7 +192,7 @@ export default function GuestBookSection({ initialMessages }: { initialMessages:
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               className="text-center mb-14"
             >
               <p className="font-sans text-[10px] sm:text-xs tracking-[0.35em] uppercase text-charcoal-light mb-3">
@@ -208,7 +211,7 @@ export default function GuestBookSection({ initialMessages }: { initialMessages:
             <motion.p
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               className="text-center font-serif italic text-charcoal text-lg sm:text-2xl mt-12"
             >
               {initialMessages.length} lời chúc yêu thương ♡

@@ -86,7 +86,7 @@ function AccountCard({
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: false }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className="bg-white border border-blush/20 text-center flex flex-col"
     >
@@ -171,13 +171,16 @@ export default function GiftSection({ accounts }: { accounts: BankAccount[] }) {
   const [zoomed, setZoomed] = useState<{ src: string; owner: string } | null>(null)
 
   return (
-    <SectionWrapper id="gift" className="section-padding bg-blush/10">
-      <SectionHeader eyebrow="Hộp quà cưới" title="Mừng cưới" ornament="♡" icon={<Gift size={36} strokeWidth={1.4} />} />
+    <SectionWrapper id="gift" className="overflow-hidden">
+      <div className="bg-charcoal py-3 sm:py-5 px-4 sm:px-10">
+        <SectionHeader eyebrow="Hộp quà cưới" title="Mừng cưới" ornament="♡" icon={<Gift size={36} strokeWidth={1.4} />} dark  compact />
+      </div>
+      <div className="section-padding bg-blush/10">
 
       <motion.p
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
         className="text-center font-serif italic text-charcoal-light text-base sm:text-lg max-w-sm sm:max-w-lg mx-auto mb-10 sm:mb-14 leading-relaxed px-4"
       >
         Sự hiện diện của bạn là món quà ý nghĩa nhất. Nếu bạn muốn gửi thêm tình cảm,
@@ -202,7 +205,7 @@ export default function GiftSection({ accounts }: { accounts: BankAccount[] }) {
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             className="text-center font-serif italic text-charcoal-light text-sm sm:text-base mt-8"
           >
             Chú rể &amp; Cô dâu ♡
@@ -232,6 +235,7 @@ export default function GiftSection({ accounts }: { accounts: BankAccount[] }) {
           />
         )}
       </AnimatePresence>
+      </div>{/* end section-padding */}
     </SectionWrapper>
   )
 }
