@@ -271,22 +271,22 @@ export default function DetailsSection({
               {/* Two families — shared grid so each row aligns across both sides */}
               <div className="grid grid-cols-2 gap-x-4 sm:gap-x-8 mb-6 sm:mb-8">
                 {/* Labels */}
-                <p className="font-sans text-[10px] xs:text-xs tracking-[0.35em] uppercase text-gold text-center pb-3">Nhà Trai</p>
-                <p className="font-sans text-[10px] xs:text-xs tracking-[0.35em] uppercase text-gold text-center pb-3">Nhà Gái</p>
+                <p className="font-playfair text-[10px] xs:text-xs tracking-[0.35em] uppercase text-gold text-center pb-3">Nhà Trai</p>
+                <p className="font-playfair text-[10px] xs:text-xs tracking-[0.35em] uppercase text-gold text-center pb-3">Nhà Gái</p>
 
                 {/* Father names */}
                 {(groomFamily?.fatherName || brideFamily?.fatherName) && (
                   <>
                     <div className="text-center">
                       {groomFamily?.fatherName ? <>
-                        <p className="font-sans text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Ông</p>
-                        <p className="font-sans text-[11px] xs:text-xs text-charcoal font-medium leading-snug">{groomFamily.fatherName}</p>
+                        <p className="font-playfair text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Ông</p>
+                        <p className="font-playfair text-[12px] xs:text-[13px] text-charcoal font-medium leading-snug">{groomFamily.fatherName}</p>
                       </> : null}
                     </div>
                     <div className="text-center">
                       {brideFamily?.fatherName ? <>
-                        <p className="font-sans text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Ông</p>
-                        <p className="font-sans text-[11px] xs:text-xs text-charcoal font-medium leading-snug">{brideFamily.fatherName}</p>
+                        <p className="font-playfair text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Ông</p>
+                        <p className="font-playfair text-[12px] xs:text-[13px] text-charcoal font-medium leading-snug">{brideFamily.fatherName}</p>
                       </> : null}
                     </div>
                   </>
@@ -297,14 +297,14 @@ export default function DetailsSection({
                   <>
                     <div className="text-center mt-2">
                       {groomFamily?.motherName ? <>
-                        <p className="font-sans text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Bà</p>
-                        <p className="font-sans text-[11px] xs:text-xs text-charcoal font-medium leading-snug">{groomFamily.motherName}</p>
+                        <p className="font-playfair text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Bà</p>
+                        <p className="font-playfair text-[12px] xs:text-[13px] text-charcoal font-medium leading-snug">{groomFamily.motherName}</p>
                       </> : null}
                     </div>
                     <div className="text-center mt-2">
                       {brideFamily?.motherName ? <>
-                        <p className="font-sans text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Bà</p>
-                        <p className="font-sans text-[11px] xs:text-xs text-charcoal font-medium leading-snug">{brideFamily.motherName}</p>
+                        <p className="font-playfair text-[9px] xs:text-[10px] text-charcoal-light uppercase tracking-widest leading-none mb-0.5">Bà</p>
+                        <p className="font-playfair text-[12px] xs:text-[13px] text-charcoal font-medium leading-snug">{brideFamily.motherName}</p>
                       </> : null}
                     </div>
                   </>
@@ -313,10 +313,10 @@ export default function DetailsSection({
                 {/* Addresses */}
                 {(groomFamily?.address || brideFamily?.address) && (
                   <>
-                    <p className="font-sans text-[10px] xs:text-[11px] text-charcoal-light leading-relaxed mt-1.5 italic text-center">
+                    <p className="font-playfair text-[10px] xs:text-[11px] text-charcoal-light leading-relaxed mt-1.5 italic text-center">
                       {groomFamily?.address}
                     </p>
-                    <p className="font-sans text-[10px] xs:text-[11px] text-charcoal-light leading-relaxed mt-1.5 italic text-center">
+                    <p className="font-playfair text-[10px] xs:text-[11px] text-charcoal-light leading-relaxed mt-1.5 italic text-center">
                       {brideFamily?.address}
                     </p>
                   </>

@@ -1,14 +1,33 @@
 import { defineField, defineType } from 'sanity'
+import { MultiImageInput } from '../components/MultiImageInput'
 
 export const galleryImage = defineType({
   name: 'galleryImage',
-  title: 'Hình ảnh Gallery',
+  title: 'Album ảnh cưới',
   type: 'document',
   fields: [
-    defineField({ name: 'image', title: 'Ảnh', type: 'image', options: { hotspot: true } }),
-    defineField({ name: 'caption', title: 'Chú thích', type: 'string' }),
-    defineField({ name: 'order', title: 'Thứ tự', type: 'number' }),
+    defineField({
+      name: 'photos',
+      title: 'Ảnh cưới',
+      type: 'array',
+      components: { input: MultiImageInput },
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'caption',
+              title: 'Chú thích',
+              type: 'string',
+            }),
+          ],
+        },
+      ],
+    }),
   ],
-  orderings: [{ title: 'Thứ tự', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],
-  preview: { select: { title: 'caption', media: 'image' } },
+  preview: {
+    select: { media: 'photos.0' },
+    prepare: () => ({ title: 'Album ảnh cưới' }),
+  },
 })

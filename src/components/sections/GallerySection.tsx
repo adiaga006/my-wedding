@@ -1,83 +1,322 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'motion/react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import Image from 'next/image'
+import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
 import { urlFor } from '@/sanity/lib/image'
 
-interface GalleryImage {
-  _id: string
-  image: { asset: { _ref: string } }
+interface GalleryPhoto {
+  _key: string
+  asset: { _ref: string }
   caption?: string
+  hotspot?: { x: number; y: number }
+  crop?: { top: number; bottom: number; left: number; right: number }
 }
 
-export default function GallerySection({ images }: { images: GalleryImage[] }) {
+const SWIPE_THRESHOLD = 40
+
+export default function GallerySection({ images: rawImages }: { images: GalleryPhoto[] }) {
+  const images = rawImages.filter((img) => img?.asset?._ref)
+  const [index, setIndex] = useState(0)
   const [lightboxIndex, setLightboxIndex] = useState(-1)
+  const touchStartX = useRef<number | null>(null)
+  const touchEndX = useRef<number | null>(null)
 
-  const slides = images.map((img) => ({
-    src: urlFor(img.image).width(1800).height(1200).url(),
-    alt: img.caption || 'Wedding photo',
-  }))
+  const navigate = useCallback(
+    (dir: 1 | -1) => {
+      if (images.length < 2) return
+      setIndex((i) => (i + dir + images.length) % images.length)
+    },
+    [images.length]
+  )
 
-  return (
-    <SectionWrapper id="gallery" className="section-padding bg-charcoal">
-      <SectionHeader eyebrow="Pre-wedding" title="Khoảnh khắc của chúng mình" />
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') navigate(1)
+      if (e.key === 'ArrowLeft') navigate(-1)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [navigate])
 
-      {images.length === 0 ? (
+  const onTouchStart = (e: { targetTouches: TouchList }) => {
+    touchStartX.current = e.targetTouches[0].clientX
+    touchEndX.current = null
+  }
+  const onTouchMove = (e: { targetTouches: TouchList }) => {
+    touchEndX.current = e.targetTouches[0].clientX
+  }
+  const onTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) return
+    const diff = touchStartX.current - touchEndX.current
+    if (Math.abs(diff) > SWIPE_THRESHOLD) navigate(diff > 0 ? 1 : -1)
+    touchStartX.current = null
+    touchEndX.current = null
+  }
+
+  if (images.length === 0) {
+    return (
+      <SectionWrapper id="gallery" className="section-padding bg-charcoal">
+        <SectionHeader eyebrow="Pre-wedding" title="Album Ảnh Cưới" dark />
         <p className="text-center text-cream/40 font-serif italic text-lg sm:text-xl py-16">
           Hình ảnh sẽ được cập nhật sớm...
         </p>
-      ) : (
-        // CSS columns masonry — xs:1 col, sm:2 col, lg:3 col
-        <div
-          className="max-w-6xl mx-auto"
-          style={{ columnCount: undefined }} // handled by className below
-        >
-          <div className="[column-count:1] xs:[column-count:2] lg:[column-count:3] [column-gap:8px] xs:[column-gap:12px] sm:[column-gap:16px]">
-            {images.map((img, i) => (
-              <motion.div
-                key={img._id}
-                initial={{ opacity: 0, scale: 0.96 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, delay: (i % 6) * 0.04 }}
-                className="relative cursor-pointer overflow-hidden group break-inside-avoid mb-3 sm:mb-4"
-                onClick={() => setLightboxIndex(i)}
-              >
-                <Image
-                  src={urlFor(img.image).width(700).url()}
-                  alt={img.caption || 'Wedding photo'}
-                  width={700}
-                  height={0}
-                  style={{ height: 'auto', width: '100%' }}
-                  className="object-cover transition-transform duration-700 group-hover:scale-105 block"
-                  sizes="(max-width: 375px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                {/* Hover overlay — desktop. On mobile: visible tap overlay */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 active:bg-black/25 transition-colors duration-400" />
+      </SectionWrapper>
+    )
+  }
 
-                {/* Caption on hover */}
-                {img.caption && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 sm:p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p className="font-serif italic text-cream text-xs sm:text-sm">{img.caption}</p>
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
+  const slides = images.map((img) => ({
+    src: urlFor(img).width(1800).url(),
+    alt: img.caption || 'Wedding photo',
+  }))
+
+  // Compute display offset, wrapping for circular feel
+  const getOffset = (i: number) => {
+    let off = i - index
+    const half = Math.floor(images.length / 2)
+    if (off > half) off -= images.length
+    if (off < -half) off += images.length
+    return off
+  }
+
+  // Card visual style based on offset from center
+  const cardStyle = (offset: number) => {
+    const abs = Math.abs(offset)
+    const sign = Math.sign(offset)
+
+    // Only render ±2 neighbors
+    if (abs > 2) return { display: 'none' }
+
+    // X shift in vw from center (clamped to avoid going too far on large screens)
+    const xShiftVw = abs === 0 ? 0 : abs === 1 ? 38 : 68
+    const tx = `calc(-50% + ${sign * xShiftVw}vw)`
+
+    const rotateY = abs === 0 ? 0 : sign * -32   // lean toward center
+    const scale   = [1, 0.77, 0.60][abs]
+    const opacity = [1, 0.82, 0.48][abs]
+    const zIndex  = [10, 6, 3][abs]
+
+    return {
+      position:   'absolute',
+      top: 0, bottom: 0,
+      left:       '50%',
+      width:      'clamp(180px, 50vw, 420px)',
+      transform:  `translateX(${tx}) rotateY(${rotateY}deg) scale(${scale})`,
+      opacity,
+      zIndex,
+      transition: 'transform 0.52s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.52s ease',
+      cursor:     abs > 0 ? 'pointer' : 'default',
+      willChange: 'transform, opacity',
+    }
+  }
+
+  return (
+    <SectionWrapper id="gallery" className="section-padding bg-charcoal">
+      {/* Custom header — gold metallic on dark bg */}
+      <div className="text-center mb-10 sm:mb-14">
+        <p
+          className="font-sans text-xs tracking-[0.3em] uppercase mb-3"
+          style={{ color: 'rgba(200,168,74,0.65)' }}
+        >
+          Pre-wedding
+        </p>
+        <h2
+          className="font-serif leading-tight"
+          style={{
+            fontSize: 'clamp(1.8rem, 5vw, 3rem)',
+            background:
+              'linear-gradient(135deg, #d4a84b 0%, #f0c96a 40%, #c8971e 70%, #e8b84a 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
+          Album Ảnh Cưới
+        </h2>
+        <div className="flex items-center justify-center gap-4 mt-5">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold/40" />
+          <span style={{ color: 'rgba(200,168,74,0.6)', fontSize: '1.1rem' }}>❧</span>
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold/40" />
+        </div>
+      </div>
+
+      <div className="relative">
+        {/* ── Coverflow track ── */}
+        <div
+          className="relative overflow-hidden"
+          style={{
+            height: 'clamp(260px, 62vw, 560px)',
+            perspective: '1100px',
+          }}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
+          {images.map((img, i) => {
+            const offset = getOffset(i)
+            const abs    = Math.abs(offset)
+            if (abs > 2) return null
+
+            const style  = cardStyle(offset)
+            const src    = urlFor(img).width(900).url()
+
+            return (
+              <div
+                key={img._key}
+                style={style}
+                onClick={() => abs > 0 && navigate(Math.sign(offset) as 1 | -1)}
+              >
+                {/* Shadow beneath card */}
+                <div
+                  style={{
+                    position:  'absolute',
+                    bottom:    -12,
+                    left:      '8%',
+                    right:     '8%',
+                    height:    24,
+                    background:'rgba(0,0,0,0.45)',
+                    filter:    'blur(10px)',
+                    borderRadius: '50%',
+                  }}
+                />
+
+                {/* Photo */}
+                <div
+                  className="relative w-full h-full overflow-hidden"
+                  style={{ borderRadius: 4, boxShadow: '0 8px 32px rgba(0,0,0,0.55)' }}
+                >
+                  <Image
+                    src={src}
+                    alt={img.caption || 'Wedding photo'}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 80vw, 50vw"
+                    priority={abs === 0}
+                  />
+
+                  {/* Dark vignette on side cards */}
+                  {abs > 0 && (
+                    <div
+                      className="absolute inset-0"
+                      style={{ background: 'rgba(10,8,6,0.28)' }}
+                    />
+                  )}
+
+                  {/* Center-card controls */}
+                  {abs === 0 && (
+                    <>
+                      {img.caption && (
+                        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/75 to-transparent px-4 pb-3 pt-8">
+                          <p className="font-serif italic text-cream/90 text-xs sm:text-sm text-center">
+                            {img.caption}
+                          </p>
+                        </div>
+                      )}
+                      <button
+                        onClick={(e: { stopPropagation: () => void }) => { e.stopPropagation(); setLightboxIndex(index) }}
+                        className="absolute top-2 right-2 z-20
+                                   bg-black/50 hover:bg-black/80
+                                   text-white/70 hover:text-white
+                                   rounded-full p-1.5 transition-all backdrop-blur-sm"
+                        aria-label="Xem toàn màn hình"
+                      >
+                        <Maximize2 size={13} />
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* ── Arrows ── */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={() => navigate(-1)}
+              className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20
+                         w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center
+                         rounded-full bg-black/30 hover:bg-black/60
+                         border border-white/12 text-white/70 hover:text-white
+                         transition-all duration-200 backdrop-blur-sm"
+              aria-label="Ảnh trước"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              onClick={() => navigate(1)}
+              className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20
+                         w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center
+                         rounded-full bg-black/30 hover:bg-black/60
+                         border border-white/12 text-white/70 hover:text-white
+                         transition-all duration-200 backdrop-blur-sm"
+              aria-label="Ảnh tiếp"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* ── Counter ── */}
+      <p
+        className="text-center font-serif text-xs mt-5 tracking-[0.3em]"
+        style={{ color: 'rgba(200,168,74,0.75)' }}
+      >
+        {index + 1} / {images.length}
+      </p>
+
+      {/* ── Dot indicators ── */}
+      {images.length > 1 && images.length <= 30 && (
+        <div className="flex justify-center gap-2 mt-2 flex-wrap">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className="h-[3px] rounded-full transition-all duration-300"
+              style={{
+                width:      i === index ? 24 : 6,
+                background: i === index ? 'rgba(200,168,74,0.85)' : 'rgba(255,255,255,0.20)',
+              }}
+              aria-label={`Ảnh ${i + 1}`}
+            />
+          ))}
         </div>
       )}
 
+      {/* ── Mobile hint ── */}
+      <p
+        className="text-center text-[10px] mt-3 sm:hidden font-serif italic tracking-wide"
+        style={{ color: 'rgba(200,168,74,0.55)' }}
+      >
+        Vuốt trái / phải để xem ảnh tiếp theo
+      </p>
+
+      {/* ── Caption ── */}
+      <p
+        className="text-center font-serif italic mt-5 sm:mt-6 px-4"
+        style={{
+          fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)',
+          color: 'rgba(200,168,74,0.6)',
+          letterSpacing: '0.02em',
+        }}
+      >
+        Những khoảnh khắc tuyệt vời của chúng mình
+      </p>
+
+      {/* ── Lightbox ── */}
       <Lightbox
         slides={slides}
         open={lightboxIndex >= 0}
         index={lightboxIndex}
         close={() => setLightboxIndex(-1)}
-        styles={{ container: { backgroundColor: 'rgba(0,0,0,0.96)' } }}
+        on={{ view: ({ index: i }: { index: number }) => setLightboxIndex(i) }}
+        styles={{ container: { backgroundColor: 'rgba(0,0,0,0.97)' } }}
       />
     </SectionWrapper>
   )

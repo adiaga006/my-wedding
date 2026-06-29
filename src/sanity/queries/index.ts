@@ -9,8 +9,8 @@ export const SITE_CONFIG_QUERY = `*[_type == "siteConfig"][0]{
 }`
 
 
-export const GALLERY_QUERY = `*[_type == "galleryImage"] | order(order asc) {
-  _id, image, caption
+export const GALLERY_QUERY = `*[_type == "galleryImage"][0].photos[]{
+  _key, asset, caption, hotspot, crop
 }`
 
 export const WEDDING_PARTY_QUERY = `*[_type == "weddingParty"] | order(order asc) {
