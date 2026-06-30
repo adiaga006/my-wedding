@@ -6,7 +6,9 @@ import type { ReactNode, CSSProperties } from 'react'
 
 type Direction = 'up' | 'down' | 'left' | 'right' | 'scale' | 'fade'
 
-const HIDDEN: Record<Direction, object> = {
+type AnimState = { opacity: number; y?: number; x?: number; scale?: number }
+
+const HIDDEN: Record<Direction, AnimState> = {
   up:    { opacity: 0, y: 60 },
   down:  { opacity: 0, y: -50 },
   left:  { opacity: 0, x: -60 },
@@ -15,7 +17,7 @@ const HIDDEN: Record<Direction, object> = {
   fade:  { opacity: 0 },
 }
 
-const VISIBLE: Record<Direction, object> = {
+const VISIBLE: Record<Direction, AnimState> = {
   up:    { opacity: 1, y: 0 },
   down:  { opacity: 1, y: 0 },
   left:  { opacity: 1, x: 0 },
