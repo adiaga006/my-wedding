@@ -163,19 +163,15 @@ interface DetailsProps {
 }
 
 const SCHEDULE = [
-  { time: '09:00', title: 'Đón khách', highlight: false },
-  { time: '10:00', title: 'Lễ thành hôn', highlight: false },
-  { time: '10:30', title: 'Rót rượu', highlight: true },
-  { time: '11:00', title: 'Khai tiệc', highlight: false },
-  { time: '11:30', title: 'Giao lưu văn nghệ', highlight: true },
-  { time: '13:00', title: 'Tiệc tàn', highlight: false },
+  { time: '11:00', title: 'Đón khách', highlight: false },
+  { time: '11:30', title: 'Khai tiệc', highlight: false },
+  { time: '12:00', title: 'Rót rượu', highlight: true },
+  { time: '12:30', title: 'Giao lưu văn nghệ', highlight: true },
 ]
 
 function WeddingScheduleTimeline({ welcomeTime, startTime }: { welcomeTime?: string; startTime?: string }) {
-  const schedule = SCHEDULE.map((s, i) => ({
-    ...s,
-    time: i === 0 && welcomeTime ? welcomeTime : i === 3 && startTime ? startTime : s.time,
-  }))
+  void welcomeTime; void startTime
+  const schedule = SCHEDULE
 
   return (
     <div className="section-padding bg-cream" id="schedule">
