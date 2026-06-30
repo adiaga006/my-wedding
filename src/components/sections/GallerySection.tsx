@@ -7,6 +7,7 @@ import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
+import ScrollReveal from '@/components/ui/ScrollReveal'
 import { urlFor } from '@/sanity/lib/image'
 
 interface GalleryPhoto {
@@ -250,16 +251,18 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
       </div>
 
       {/* ── Counter ── */}
-      <p
-        className="text-center font-serif text-xs mt-5 tracking-[0.3em]"
-        style={{ color: 'rgba(140,100,15,0.65)' }}
-      >
-        {index + 1} / {images.length}
-      </p>
+      <ScrollReveal from="up" delay={0.05} duration={1.2} className="text-center mt-5">
+        <p
+          className="font-serif text-xs tracking-[0.3em]"
+          style={{ color: 'rgba(140,100,15,0.65)' }}
+        >
+          {index + 1} / {images.length}
+        </p>
+      </ScrollReveal>
 
       {/* ── Dot indicators ── */}
       {images.length > 1 && images.length <= 30 && (
-        <div className="flex justify-center gap-2 mt-2 flex-wrap">
+        <ScrollReveal from="up" delay={0.12} duration={1.2} className="flex justify-center gap-2 mt-2 flex-wrap">
           {images.map((_, i) => (
             <button
               key={i}
@@ -272,28 +275,32 @@ export default function GallerySection({ images: rawImages }: { images: GalleryP
               aria-label={`Ảnh ${i + 1}`}
             />
           ))}
-        </div>
+        </ScrollReveal>
       )}
 
       {/* ── Mobile hint ── */}
-      <p
-        className="text-center text-[10px] mt-3 sm:hidden font-serif italic tracking-wide"
-        style={{ color: 'rgba(140,100,15,0.55)' }}
-      >
-        Vuốt trái / phải để xem ảnh tiếp theo
-      </p>
+      <ScrollReveal from="fade" delay={0.2} duration={1.3} className="text-center mt-3 sm:hidden">
+        <p
+          className="text-[10px] font-serif italic tracking-wide"
+          style={{ color: 'rgba(140,100,15,0.55)' }}
+        >
+          Vuốt trái / phải để xem ảnh tiếp theo
+        </p>
+      </ScrollReveal>
 
       {/* ── Caption ── */}
-      <p
-        className="text-center font-serif italic mt-5 sm:mt-6 px-4"
-        style={{
-          fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)',
-          color: 'rgba(140,100,15,0.6)',
-          letterSpacing: '0.02em',
-        }}
-      >
-        Những khoảnh khắc tuyệt vời của chúng mình
-      </p>
+      <ScrollReveal from="up" delay={0.25} duration={1.5} className="text-center mt-5 sm:mt-6 px-4">
+        <p
+          className="font-serif italic"
+          style={{
+            fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)',
+            color: 'rgba(140,100,15,0.6)',
+            letterSpacing: '0.02em',
+          }}
+        >
+          Những khoảnh khắc tuyệt vời của chúng mình
+        </p>
+      </ScrollReveal>
 
       {/* ── Lightbox ── */}
       <Lightbox

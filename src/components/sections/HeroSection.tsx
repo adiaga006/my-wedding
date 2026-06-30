@@ -332,7 +332,23 @@ export default function HeroSection({
 
       <div className="absolute inset-0 bg-charcoal" />
 
-      {/* Mobile: parallax + contain (no crop) */}
+      {/* Mobile: blurred backdrop — CSS bg-image với inset âm để blur lan ra hết viền */}
+      {imageUrl && (
+        <div
+          className="md:hidden"
+          style={{
+            position: 'absolute',
+            inset: '-50px',
+            backgroundImage: `url("${imageUrl}")`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'blur(28px) brightness(0.78)',
+          }}
+          aria-hidden
+        />
+      )}
+
+      {/* Mobile: parallax + contain (sharp photo on top) */}
       {imageUrl && (
         <motion.div className="absolute inset-0 md:hidden"
           style={{ y: bgY }}
@@ -358,8 +374,8 @@ export default function HeroSection({
         </div>
       )}
 
-      {/* Gradient mobile */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/85 z-[1] md:hidden" />
+      {/* Gradient mobile — chỉ tối nhẹ ở dưới để text đọc được */}
+      <div className="absolute inset-0 z-[1] md:hidden" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.08) 55%, rgba(0,0,0,0.72) 100%)' }} />
       {/* Gradient desktop — tối mạnh phía trên để che header text */}
       <div className="absolute inset-0 z-[1] hidden md:block" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.55) 15%, rgba(0,0,0,0.20) 40%, rgba(0,0,0,0.20) 65%, rgba(0,0,0,0.80) 100%)' }} />
 

@@ -13,7 +13,6 @@ export const rsvp = defineType({
       type: 'boolean',
     }),
     defineField({ name: 'guestCount', title: 'Số khách', type: 'number', initialValue: 1 }),
-    defineField({ name: 'note', title: 'Ghi chú', type: 'text', rows: 3 }),
     defineField({ name: 'submittedAt', title: 'Thời gian gửi', type: 'datetime' }),
   ],
   preview: {

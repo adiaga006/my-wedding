@@ -12,8 +12,7 @@ import Footer from '@/components/layout/Footer'
 import HeroSection from '@/components/sections/HeroSection'
 import DetailsSection from '@/components/sections/DetailsSection'
 import GallerySection from '@/components/sections/GallerySection'
-import RSVPSection from '@/components/sections/RSVPSection'
-import GuestBookSection from '@/components/sections/GuestBookSection'
+import RSVPGuestbookSection from '@/components/sections/RSVPGuestbookSection'
 import GiftSection from '@/components/sections/GiftSection'
 import MusicPlayer from '@/components/ui/MusicPlayer'
 import InviteIntro from '@/components/ui/InviteIntro'
@@ -87,8 +86,7 @@ export default async function HomePage() {
           brideFamily={config?.brideFamily}
         />
         <GallerySection images={gallery || []} />
-        <RSVPSection />
-        <GuestBookSection initialMessages={guestbook || []} />
+        <RSVPGuestbookSection initialMessages={guestbook || []} />
         <GiftSection accounts={bankAccounts || []} />
       </main>
       <Footer />

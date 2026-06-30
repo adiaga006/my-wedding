@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { MapPin, Clock, Map, X } from 'lucide-react'
 import SectionWrapper from '@/components/ui/SectionWrapper'
 import SectionHeader from '@/components/ui/SectionHeader'
+import ScrollReveal, { RevealWords } from '@/components/ui/ScrollReveal'
 
 interface TimeLeft { days: number; hours: number; minutes: number; seconds: number }
 
@@ -161,6 +162,107 @@ interface DetailsProps {
   brideFamily?: Family
 }
 
+const SCHEDULE = [
+  { time: '09:00', title: 'Đón khách', highlight: false },
+  { time: '10:00', title: 'Lễ thành hôn', highlight: false },
+  { time: '10:30', title: 'Rót rượu', highlight: true },
+  { time: '11:00', title: 'Khai tiệc', highlight: false },
+  { time: '11:30', title: 'Giao lưu văn nghệ', highlight: true },
+  { time: '13:00', title: 'Tiệc tàn', highlight: false },
+]
+
+function WeddingScheduleTimeline({ welcomeTime, startTime }: { welcomeTime?: string; startTime?: string }) {
+  const schedule = SCHEDULE.map((s, i) => ({
+    ...s,
+    time: i === 0 && welcomeTime ? welcomeTime : i === 3 && startTime ? startTime : s.time,
+  }))
+
+  return (
+    <div className="section-padding bg-cream" id="schedule">
+      <div className="max-w-lg mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-10 sm:mb-14"
+        >
+          <p className="font-sans text-[10px] xs:text-xs tracking-[0.35em] uppercase text-charcoal-light mb-3">
+            Chương trình
+          </p>
+          <h2 className="font-serif text-3xl sm:text-4xl text-charcoal">Lịch trình ngày cưới</h2>
+          <div className="flex items-center justify-center gap-4 mt-5">
+            <div className="h-px w-12 bg-blush" />
+            <span className="text-gold text-lg">✦</span>
+            <div className="h-px w-12 bg-blush" />
+          </div>
+        </motion.div>
+
+        {/* Timeline */}
+        <div className="relative">
+          {/* Vertical line — center on desktop, left on mobile */}
+          <div className="absolute left-[7px] sm:left-1/2 sm:-translate-x-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-blush/70 to-transparent pointer-events-none" />
+
+          <div className="sm:space-y-0 space-y-0">
+            {schedule.map((item, i) => {
+              const isLeft = i % 2 === 0
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: false }}
+                  transition={{ duration: 0.65, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative flex items-center py-3.5 sm:py-4"
+                >
+                  {/* Mobile layout: dot on left, content to right */}
+                  <div className="sm:hidden pl-7 flex items-baseline gap-3">
+                    <span className={`font-sans text-xs tabular-nums font-medium flex-shrink-0 ${item.highlight ? 'text-gold' : 'text-charcoal-light'}`}>
+                      {item.time}
+                    </span>
+                    <span className={`font-serif text-base leading-snug ${item.highlight ? 'text-gold' : 'text-charcoal'}`}>
+                      {item.title}
+                    </span>
+                    {item.highlight && <span className="text-gold text-xs ml-1">✦</span>}
+                  </div>
+
+                  {/* Desktop: alternating left / right */}
+                  <div className={`hidden sm:flex flex-1 items-center gap-6 ${isLeft ? 'flex-row' : 'flex-row-reverse'}`}>
+                    {/* Content block */}
+                    <div className={`flex-1 ${isLeft ? 'text-right' : 'text-left'}`}>
+                      <p className={`font-serif text-lg ${item.highlight ? 'text-gold' : 'text-charcoal'} leading-snug`}>
+                        {item.title}
+                        {item.highlight && <span className="ml-2 text-sm">✦</span>}
+                      </p>
+                      <p className="font-sans text-xs tracking-widest text-charcoal-light tabular-nums mt-0.5">
+                        {item.time}
+                      </p>
+                    </div>
+
+                    {/* Center dot */}
+                    <div className="relative flex-shrink-0 z-10 flex items-center justify-center w-4 h-4">
+                      <div className={`w-3 h-3 rounded-full border-2 shadow-sm ${item.highlight ? 'bg-gold border-gold' : 'bg-white border-blush-dark'}`} />
+                      {item.highlight && (
+                        <div className="absolute inset-0 rounded-full bg-gold/20 animate-ping" />
+                      )}
+                    </div>
+
+                    {/* Empty spacer side */}
+                    <div className="flex-1" />
+                  </div>
+
+                  {/* Mobile dot (absolute, on the left line) */}
+                  <div className={`sm:hidden absolute left-[3px] top-1/2 -translate-y-1/2 w-[9px] h-[9px] rounded-full border-2 z-10 ${item.highlight ? 'bg-gold border-gold' : 'bg-white border-blush-dark'}`} />
+                </motion.div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function extractMapSrc(value: string): string {
   const match = value.match(/src=["']([^"']+)["']/)
   return match ? match[1] : value
@@ -202,9 +304,9 @@ function MapModal({ embedUrl, name, onClose }: { embedUrl: string; name: string;
         <div className="flex-1 min-h-0">
           <iframe
             src={embedUrl}
-            className="w-full h-full border-0"
+            style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+            allow="fullscreen"
             allowFullScreen
-            loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             title={`Bản đồ ${name}`}
           />
@@ -265,9 +367,10 @@ export default function DetailsSection({
         {/* Family announcement block */}
         {hasFamilyInfo && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: false }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             className="mb-10 sm:mb-14"
           >
             <div className="border border-blush/30 bg-white rounded-sm px-4 xs:px-7 sm:px-10 py-8 sm:py-10">
@@ -374,86 +477,93 @@ export default function DetailsSection({
           </motion.div>
         )}
 
-        {/* Calendar + date + countdown */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          className="text-center mb-10 sm:mb-14 flex flex-col items-center"
-        >
-          {/* Thứ + ngày */}
-          <p className="font-sans text-sm sm:text-base tracking-[0.45em] uppercase text-charcoal-light mb-2">
-            {weekday}
-          </p>
-          <p
-            className="font-serif font-light text-charcoal leading-none mb-2"
-            style={{ fontSize: 'clamp(2.2rem, 9vw, 4.5rem)', letterSpacing: 'clamp(0.02em, 0.8vw, 0.08em)' }}
-          >
-            {dateNum}
-          </p>
-          {venue?.lunarDate && (
-            <p className="font-sans text-xs sm:text-sm text-charcoal-light italic tracking-wide px-4 mb-0">
-              ({venue.lunarDate})
+        {/* Calendar + date + countdown — từng phần tử animate riêng */}
+        <div className="text-center mb-10 sm:mb-14 flex flex-col items-center">
+          <ScrollReveal from="down" delay={0} duration={1.2}>
+            <p className="font-sans text-sm sm:text-base tracking-[0.45em] uppercase text-charcoal-light mb-2">
+              {weekday}
             </p>
+          </ScrollReveal>
+
+          <ScrollReveal from="up" delay={0.15} duration={1.5}>
+            <p
+              className="font-serif font-light text-charcoal leading-none mb-2"
+              style={{ fontSize: 'clamp(2.2rem, 9vw, 4.5rem)', letterSpacing: 'clamp(0.02em, 0.8vw, 0.08em)' }}
+            >
+              {dateNum}
+            </p>
+          </ScrollReveal>
+
+          {venue?.lunarDate && (
+            <ScrollReveal from="right" delay={0.3} duration={1.2}>
+              <p className="font-sans text-xs sm:text-sm text-charcoal-light italic tracking-wide px-4 mb-0">
+                ({venue.lunarDate})
+              </p>
+            </ScrollReveal>
           )}
 
-          {/* Lịch tháng */}
-          <div className="mt-6">
+          <ScrollReveal from="scale" delay={0.45} duration={1.4} className="mt-6">
             <WeddingCalendar date={date} />
-          </div>
+          </ScrollReveal>
 
-          {/* Đếm ngược */}
-          <WeddingCountdown targetDate={weddingDate} />
-        </motion.div>
+          <ScrollReveal from="up" delay={0.65} duration={1.3}>
+            <WeddingCountdown targetDate={weddingDate} />
+          </ScrollReveal>
+        </div>
 
         {/* Venue card */}
         {venue ? (
-          <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="relative bg-white shadow-sm hover:shadow-lg transition-shadow duration-500"
-          >
+          <div className="relative bg-white shadow-sm hover:shadow-lg transition-shadow duration-500">
             <div className="px-6 xs:px-10 sm:px-14 md:px-16 pt-8 sm:pt-10 pb-10 sm:pb-12 text-center">
 
-              {/* Top ornament: line ◇ line */}
-              <div className="flex items-center gap-4 mb-8 sm:mb-10">
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold/70" />
-                <div className="w-4 h-4 border border-gold rotate-45 flex-shrink-0" />
-                <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold/70" />
-              </div>
+              {/* Top ornament */}
+              <ScrollReveal from="scale" delay={0} duration={1.1}>
+                <div className="flex items-center gap-4 mb-8 sm:mb-10">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold/70" />
+                  <div className="w-4 h-4 border border-gold rotate-45 flex-shrink-0" />
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold/70" />
+                </div>
+              </ScrollReveal>
 
-              {/* Venue name + hall */}
+              {/* Venue name — từng chữ từ dưới */}
               {venue.name && (
-                <h3 className="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal leading-none mb-2">
-                  {venue.name}
-                </h3>
+                <RevealWords
+                  text={venue.name}
+                  className="font-serif text-4xl sm:text-5xl md:text-6xl text-charcoal leading-none mb-2"
+                  from="up"
+                  delay={0.1}
+                  stagger={0.12}
+                  duration={1.4}
+                />
               )}
               {venue.hall && (
-                <p className="font-sans text-[10px] xs:text-xs tracking-[0.4em] uppercase text-gold mb-6">{venue.hall}</p>
+                <ScrollReveal from="down" delay={0.25} duration={1.1}>
+                  <p className="font-sans text-[10px] xs:text-xs tracking-[0.4em] uppercase text-gold mb-6">{venue.hall}</p>
+                </ScrollReveal>
               )}
 
               {/* Ornament divider */}
-              <div className="flex items-center justify-center gap-4 mb-7">
-                <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-transparent to-blush/60" />
-                <span className="text-gold/70 text-base leading-none">❧</span>
-                <div className="h-px flex-1 max-w-[60px] bg-gradient-to-l from-transparent to-blush/60" />
-              </div>
+              <ScrollReveal from="scale" delay={0.4} duration={1.0}>
+                <div className="flex items-center justify-center gap-4 mb-7">
+                  <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-transparent to-blush/60" />
+                  <span className="text-gold/70 text-base leading-none">❧</span>
+                  <div className="h-px flex-1 max-w-[60px] bg-gradient-to-l from-transparent to-blush/60" />
+                </div>
+              </ScrollReveal>
 
-              {/* Address — full center */}
+              {/* Address — từ trái */}
               {venue.address && (
-                <div className="mb-8">
+                <ScrollReveal from="left" delay={0.5} duration={1.3} className="mb-8">
                   <div className="inline-flex items-start gap-2 text-left">
                     <MapPin size={13} className="text-gold flex-shrink-0 mt-[3px]" />
                     <p className="font-sans text-sm sm:text-[15px] text-charcoal-light leading-relaxed">
                       {venue.address}
                     </p>
                   </div>
-                </div>
+                </ScrollReveal>
               )}
 
-              {/* Times */}
+              {/* Times — từng ô từ dưới */}
               {(venue.welcomeTime || venue.startTime) && (() => {
                 const times = [
                   venue.welcomeTime && { label: 'Đón khách', value: venue.welcomeTime },
@@ -463,13 +573,17 @@ export default function DetailsSection({
                 return (
                   <div className="mb-9 mx-auto max-w-[18rem] xs:max-w-xs sm:max-w-sm">
                     <div className={`grid border border-blush/30 divide-x divide-blush/30 ${times.length === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
-                      {times.map((t) => (
-                        <div key={t.label} className="flex flex-col items-center gap-2 py-4 px-3">
-                          <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-charcoal-light">{t.label}</p>
-                          <div className="flex items-center gap-1.5">
-                            <Clock size={12} className="text-gold" />
-                            <p className="font-sans font-light text-2xl sm:text-3xl text-charcoal leading-none tracking-widest tabular-nums">{t.value}</p>
-                          </div>
+                      {times.map((t, ti) => (
+                        <div key={t.label}>
+                          <ScrollReveal from="up" delay={0.6 + ti * 0.14} duration={1.2}>
+                            <div className="flex flex-col items-center gap-2 py-4 px-3">
+                              <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-charcoal-light">{t.label}</p>
+                              <div className="flex items-center gap-1.5">
+                                <Clock size={12} className="text-gold" />
+                                <p className="font-sans font-light text-2xl sm:text-3xl text-charcoal leading-none tracking-widest tabular-nums">{t.value}</p>
+                              </div>
+                            </div>
+                          </ScrollReveal>
                         </div>
                       ))}
                     </div>
@@ -479,11 +593,12 @@ export default function DetailsSection({
 
               {/* Inline map */}
               {venue.mapEmbed && extractMapSrc(venue.mapEmbed) && (
-                <div className="mb-7 overflow-hidden relative -mx-6 xs:-mx-10 sm:-mx-14 md:-mx-16" style={{ paddingBottom: '52%' }}>
+                <div className="mb-7 overflow-hidden -mx-6 xs:-mx-10 sm:-mx-14 md:-mx-16" style={{ position: 'relative', paddingBottom: '52%', height: 0 }}>
                   <iframe
                     src={extractMapSrc(venue.mapEmbed)}
-                    className="absolute inset-0 w-full h-full border-0"
-                    allowFullScreen loading="lazy"
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none', display: 'block' }}
+                    allow="fullscreen"
+                    allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
                     title={`Bản đồ ${venue.name}`}
                   />
@@ -491,36 +606,34 @@ export default function DetailsSection({
               )}
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                {venue.mapEmbed && extractMapSrc(venue.mapEmbed) && (
-                  <button onClick={() => setShowMap(true)} className="btn-primary w-full sm:w-auto px-10">
-                    <Map size={13} /> Xem to hơn
-                  </button>
-                )}
-                {venue.mapUrl && (
-                  <a href={venue.mapUrl} target="_blank" rel="noopener noreferrer" className="btn-outline w-full sm:w-auto px-10">
-                    <MapPin size={13} /> Mở Google Maps
-                  </a>
-                )}
-              </div>
+              <ScrollReveal from="up" delay={0.85} duration={1.2}>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  {venue.mapEmbed && extractMapSrc(venue.mapEmbed) && (
+                    <button onClick={() => setShowMap(true)} className="btn-primary w-full sm:w-auto px-10">
+                      <Map size={13} /> Xem to hơn
+                    </button>
+                  )}
+                  {venue.mapUrl && (
+                    <a href={venue.mapUrl} target="_blank" rel="noopener noreferrer" className="btn-outline w-full sm:w-auto px-10">
+                      <MapPin size={13} /> Mở Google Maps
+                    </a>
+                  )}
+                </div>
+              </ScrollReveal>
             </div>
 
-          </motion.div>
+          </div>
         ) : (
           <p className="text-center font-serif italic text-charcoal-light text-xl sm:text-2xl py-16">
             Thông tin hôn lễ sẽ được cập nhật sớm...
           </p>
         )}
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: false }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="text-center font-serif italic text-charcoal-light text-base sm:text-lg mt-10 sm:mt-12 px-4"
-        >
-          Sự hiện diện của bạn là món quà quý giá nhất với {groomName} &amp; {brideName}
-        </motion.p>
+        <ScrollReveal from="up" delay={0.1} duration={1.3} className="text-center mt-10 sm:mt-12 px-4">
+          <p className="font-serif italic text-charcoal-light text-base sm:text-lg">
+            Sự hiện diện của bạn là món quà quý giá nhất với {groomName} &amp; {brideName}
+          </p>
+        </ScrollReveal>
       </div>
 
       <AnimatePresence>
@@ -529,6 +642,8 @@ export default function DetailsSection({
         )}
       </AnimatePresence>
       </div>{/* end section-padding */}
+
+      <WeddingScheduleTimeline welcomeTime={venue?.welcomeTime} startTime={venue?.startTime} />
     </SectionWrapper>
   )
 }
