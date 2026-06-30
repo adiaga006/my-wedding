@@ -1,6 +1,6 @@
 'use client'
 
-import { useId } from 'react'
+import { useId, useState, useEffect } from 'react'
 import { motion } from 'motion/react'
 import { useMusicContext } from '@/contexts/MusicContext'
 
@@ -35,6 +35,8 @@ const SECTOR_PATH = `M ${R} ${R} L ${sx1.toFixed(2)} ${sy1.toFixed(2)} A ${LABEL
 export default function VinylDisc() {
   const uid = useId().replace(/:/g, '')
   const { playing, currentTitle, hasTrack } = useMusicContext()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
   if (!hasTrack) return null
 
   return (
@@ -231,8 +233,8 @@ export default function VinylDisc() {
             ))}
           </div>
         )}
-        <p className="font-sans text-[11px] sm:text-xs text-cream/55 tracking-wide leading-snug">
-          {currentTitle || '♪'}
+        <p className="font-sans text-[11px] sm:text-xs text-cream/55 tracking-wide leading-snug" suppressHydrationWarning>
+          {mounted ? (currentTitle || '♪') : '♪'}
         </p>
       </div>
     </motion.div>
